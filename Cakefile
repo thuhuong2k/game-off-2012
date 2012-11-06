@@ -11,14 +11,14 @@ task 'build', 'build js file', ->
   files = readdir source_dir, '.coffee'
   for file in files
     command += ' ' + file
-  exec command ( err, stdout, stderr ) ->
+  exec command, ( err, stdout, stderr ) ->
     throw err if err
     console.log 'Done!'
 
 # Recursive, synchronous readdir
 readdir = ( dir, ext ) ->
   filelist = []
-  files = fs.readdirSyncc dir
+  files = fs.readdirSync dir
   for file in files
     file = dir + '/' + file
     stats = fs.statSync file
