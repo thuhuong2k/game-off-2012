@@ -35,18 +35,18 @@ e3d.compileProgram = (vertexSource, fragmentSource) ->
 
   gl = e3d.gl
 
-  createShader = (type,source) ->
-    id = gl.createShader(type)
-    gl.shaderSource(id,source)
-    gl.compileShader(id)
-    if not gl.getShaderParameter(id, gl.COMPILE_STATUS)
-      console.log gl.getShaderInfoLog(id)
+  compileShader = (type,source) ->
+    shader = gl.createShader(type)
+    gl.shaderSource(shader, source)
+    gl.compileShader(shader)
+    if not gl.getShaderParameter(shader, gl.COMPILE_STATUS)
+      console.log gl.getShaderInfoLog(shader)
       throw "compileShader fail!"
-    return id
+    return shader
 
   program = gl.createProgram()
-  gl.attachShader(program, createShader(gl.VERTEX_SHADER, vertexSource))
-  gl.attachShader(program, createShader(gl.FRAGMENT_SHADER, fragmentSource))
+  gl.attachShader(program, compileShader(gl.VERTEX_SHADER, vertexSource))
+  gl.attachShader(program, compileShader(gl.FRAGMENT_SHADER, fragmentSource))
   gl.linkProgram(program)
   if not gl.getProgramParameter(program, gl.LINK_STATUS)
     console.log gl.getProgramInfoLog(program)
