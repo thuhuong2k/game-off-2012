@@ -1,5 +1,4 @@
 # Matrix math functions
-
 mat =
   row: ( m, i ) ->
     [ m[i*4+0]
@@ -22,7 +21,7 @@ mat =
     r1 = mat.row( b, 1 )
     r2 = mat.row( b, 2 )
     r3 = mat.row( b, 3 )
-    dot = vec4.dot
+    dot = vec.dot4
     
     [ dot( c0, r0 ), dot( c1, r0 ), dot( c2, r0 ), dot( c3, r0 )
       dot( c0, r1 ), dot( c1, r1 ), dot( c2, r1 ), dot( c3, r1 )
@@ -48,10 +47,10 @@ mat =
   rotateX: ( m, a ) ->
     s = Math.sin( a )
     c = Math.cos( a )
-    r = [ 1, 0,  0, 0
-          0, c, -s, 0
-          0, s,  c, 0
-          0, 0,  0, 1 ]
+    r = [ 1,  0, 0, 0
+          0,  c, s, 0
+          0, -s, c, 0
+          0,  0,  0, 1 ]
     
     mat.mul( m, r )
   
@@ -68,12 +67,24 @@ mat =
   rotateZ: ( m, a ) ->
     s = Math.sin( a )
     c = Math.cos( a )
-    r = [ c, -s, 0, 0
-          s,  c, 0, 0
-          0,  0, 1, 0
-          0,  0, 0, 1 ]
+    r = [  c, s, 0, 0
+          -s, c, 0, 0
+           0, 0, 1, 0
+           0, 0, 0, 1 ]
     
     mat.mul( m, r )
+  
+  lookat: ( m, eye, target, up ) ->
+    z = vec.unit( vec.sub( eye, target ) )
+    x = vec.unit( vec.cross( z, up ) )
+    y = vec.unit( vec.cross( x, z ) )
+    dot = vec.dot
+    l = [  x[0],           y[0],           z[0],          0
+           x[1],           y[1],           z[1],          0
+           x[2],           y[2],           z[2],          0
+          -dot( x, eye ), -dot( y, eye ), -dot( z, eye ), 1 ]
+    
+    mat.mul( m, l )
   
   identity: ->
     [ 1, 0, 0, 0
@@ -99,4 +110,3 @@ mat =
     right = top * aspect
     
     mat.frustum( -right, right, -top, top, near, far )
-

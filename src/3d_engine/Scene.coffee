@@ -1,23 +1,20 @@
 e3d = e3d || {}
 
+# 3D scene constructor
 e3d.Scene = ->
-
   gl = e3d.gl
+  program = e3d.program.mesh
   
   @objects = []
-  
   @camera = null
 
   @render = ->
-    gl.clear(gl.COLOR_BUFFER_BIT)
-
-    for object in @objects
-      if object?
-        object.render()
-
-  @update = ->
-    for object in @objects
-      if object?
-        object.update()
+    if @camera?
+      program.begin()
+      matrix = @camera.createMatrix()
+      for object in @objects
+        if object?
+          object.render(matrix)
+      program.end()
 
   return
