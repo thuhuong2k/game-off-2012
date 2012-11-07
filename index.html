@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Zoko</title>
-		<link href="css/style.css" rel="stylesheet" />
-	</head>
-	<body>
-		<h1>Zoko</h1>
-		<canvas id="zoko" height="400" width="700"></canvas>
-	</body>
-	<script src="js/zoko.js"></script>
-	<script>
-		window.onload = function() {
-			canvas = document.getElementById('zoko');
+  <head>
+    <title>Zoko</title>
+    <link href="css/style.css" rel="stylesheet" />
+  </head>
+  <body>
+    <h1>Zoko</h1>
+    <canvas id="zoko" height="400" width="700"></canvas>
+  </body>
+  <script src="js/zoko.js"></script>
+  <script>
+    window.onload = function() {
+      canvas = document.getElementById('zoko');
       e3d.init(canvas);
       
       pyramid = [
@@ -31,7 +31,7 @@
             
             0,  0,  1,   0.5, 0.0,  1, 0, 0,
             1,  1, -1,   0.0, 1.0,  0, 1, 0,
-           -1,  1, -1,   1.0, 1.0,  0, 0, 1,
+           -1,  1, -1,   1.0, 1.0,  0, 0, 1
       ];
       
       mesh = new e3d.Mesh(pyramid);
@@ -46,13 +46,13 @@
       scene.camera = camera;
       scene.objects = [object];
       
-			e3d.scene = scene;
+      e3d.scene = scene;
       
       e3d.onrender = function () {
         object.rotation = vec.add(object.rotation, [0.005, 0.01, 0.007]);
       };
       
-			e3d.run();
-		}
-	</script>
+      e3d.run();
+    }
+  </script>
 </html>
