@@ -1,0 +1,2 @@
+LevelState = ->
+	$.extend(this, Observable)
