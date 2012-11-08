@@ -4,7 +4,6 @@ e3d.init = (canvas) ->
   # Init WebGL
   gl = canvas.getContext('experimental-webgl', { alpha: false })
   gl.enable(gl.DEPTH_TEST)
-  gl.clearColor(0.1, 0.2, 0.5, 1.0)
 
   # Set properties
   e3d.width = canvas.width
