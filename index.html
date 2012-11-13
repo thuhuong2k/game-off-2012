@@ -15,6 +15,15 @@
       canvas = document.getElementById('zoko');
       e3d.init(canvas);
       
+      levelState = new LevelState(levels.test);
+      levelView = new LevelView();
+      
+      //levelState.observerList = [levelView];
+      //levelState.notifyObservers();
+
+      levelView.update(levelState);
+
+
       pyramid = [
         //  Position    TexCoord     Color
         //  x,  y,  z,   s,   t,    r, g, b
@@ -40,18 +49,21 @@
       object = new e3d.Object;
       object.meshes = [mesh];
       
-      camera = new e3d.Camera;
-      camera.position = [0,-8,0];
+      e3d.scene.objects = [object]
+
+      //camera = new e3d.Camera;
+      //camera.position = [0,-8,0];
       
-      scene = new e3d.Scene;
-      scene.camera = camera;
-      scene.objects = [object];
+      //scene = new e3d.Scene;
+      //scene.camera = camera;
+      //scene.objects = [object];
       
-      e3d.scene = scene;
+      //e3d.scene = scene;
       
+      /*
       e3d.onrender = function () {
         object.rotation = vec.add(object.rotation, [0.005, 0.01, 0.007]);
-      };
+      };*/
       
       e3d.run();
     }

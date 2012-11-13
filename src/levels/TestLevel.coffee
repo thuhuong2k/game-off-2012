@@ -1,16 +1,16 @@
-Levels = Levels || {}
+levels = levels || {}
 
-Levels.test = [
+levels.test = [
   [
     "OOOO"
     "OOOO"
     "OOO^"
-    "X000"
+    "XOOO"
   ]
   [
     "OOOO"
     "OOOO"
-    "OO  "
+    "OO ^"
     "    "
   ]
 ]
