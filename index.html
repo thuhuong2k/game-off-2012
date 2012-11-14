@@ -24,7 +24,7 @@
       levelView.update(levelState);
 
 
-      pyramid = [
+      /*pyramid = [
         //  Position    TexCoord     Color
         //  x,  y,  z,   s,   t,    r, g, b
             0,  0,  1,   0.5, 0.0,  1, 0, 0,
@@ -49,21 +49,21 @@
       object = new e3d.Object;
       object.meshes = [mesh];
       
-      e3d.scene.objects = [object]
-
-      //camera = new e3d.Camera;
-      //camera.position = [0,-8,0];
+      camera = new e3d.Camera;
+      camera.position = [0,0,0];
+      camera.distance = 8
       
-      //scene = new e3d.Scene;
-      //scene.camera = camera;
-      //scene.objects = [object];
+      scene = new e3d.Scene;
+      scene.camera = camera;
+      scene.objects = [object];
       
-      //e3d.scene = scene;
+      e3d.scene = scene;*/
       
-      /*
+      
       e3d.onrender = function () {
-        object.rotation = vec.add(object.rotation, [0.005, 0.01, 0.007]);
-      };*/
+        camera = e3d.scene.camera;
+        camera.rotation = vec.add(camera.rotation, [0.0, 0.0, 0.007]);
+      };
       
       e3d.run();
     }
