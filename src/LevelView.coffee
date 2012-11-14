@@ -16,38 +16,51 @@ LevelView = ->
                           levelState.depth / 2
                           levelState.height / 2 ]
   
+  # Makes a quadrangle out of two triangles
+  # Vertex positions should be specified in the following order:
+  # 1-----2
+  # |   / |
+  # | /   |
+  # 3-----4
   makeQuad = (positions, color) ->
     p = positions
     r = color[0]
     g = color[1]
     b = color[2]
-    v = [ [ p[0][0], p[0][1], p[0][2], 0, 0, r, g, b ]
-          [ p[1][0], p[1][1], p[1][2], 1, 0, r, g, b ]
-          [ p[2][0], p[2][1], p[2][2], 0, 1, r, g, b ]
-          [ p[3][0], p[3][1], p[3][2], 1, 1, r, g, b ] ]
+    #     |         position         | texcoord | color  |
+    v = [ [ p[0][0], p[0][1], p[0][2],   0, 0,   r, g, b ]
+          [ p[1][0], p[1][1], p[1][2],   1, 0,   r, g, b ]
+          [ p[2][0], p[2][1], p[2][2],   0, 1,   r, g, b ]
+          [ p[3][0], p[3][1], p[3][2],   1, 1,   r, g, b ] ]
+    #               |   triangle 1   |   triangle 2   |
     return [].concat(v[0], v[1], v[2], v[3], v[2], v[1])
   
-  makeLeft = (x, y, z) ->
+  # Creates the left face of a cube at [x, y, z]
+  makeLeftFace = (x, y, z) ->
     positions = [ [x, y, z+1], [x, y+1, z+1], [x, y, z], [x, y+1, z] ]
     color = [0.7, 0.7, 0.7]
     return makeQuad(positions, color)
   
-  makeRight = (x, y, z) ->
+  # Creates the right face of a cube at [x, y, z]
+  makeRightFace = (x, y, z) ->
     positions = [ [x+1, y+1, z+1], [x+1, y, z+1], [x+1, y+1, z], [x+1, y, z] ]
     color = [0.8, 0.8, 0.8]
     return makeQuad(positions, color)
   
-  makeBack = (x, y, z) ->
+  # Creates the back face of a cube at [x, y, z]
+  makeBackFace = (x, y, z) ->
     positions = [ [x+1, y, z+1], [x, y, z+1], [x+1, y, z], [x, y, z] ]
     color = [0.6, 0.6, 0.6]
     return makeQuad(positions, color)
   
-  makeFront = (x, y, z) ->
+  # Creates the front face of a cube at [x, y, z]
+  makeFrontFace = (x, y, z) ->
     positions = [ [x, y+1, z+1], [x+1, y+1, z+1], [x, y+1, z], [x+1, y+1, z] ]
     color = [0.9, 0.9, 0.9]
     return makeQuad(positions, color)
   
-  makeTop = (x, y, z) ->
+  # Creates the top face of a cube at [x, y, z]
+  makeTopFace = (x, y, z) ->
     positions = [ [x, y, z+1], [x+1, y, z+1], [x, y+1, z+1], [x+1, y+1, z+1] ]
     color = [1.0, 1.0, 1.0]
     return makeQuad(positions, color)
@@ -64,11 +77,11 @@ LevelView = ->
         backBlock = levelState.blockAt(x, y-1, z)
         frontBlock = levelState.blockAt(x, y+1, z)
         topBlock = levelState.blockAt(x, y, z+1)
-        if leftBlock.empty then side = side.concat(makeLeft(x, y, z))
-        if rightBlock.empty then side = side.concat(makeRight(x, y, z))
-        if backBlock.empty then side = side.concat(makeBack(x, y, z) )
-        if frontBlock.empty then side = side.concat(makeFront(x, y, z))
-        if topBlock.empty then side = side.concat(makeTop(x, y, z))
+        if leftBlock.empty then side = side.concat(makeLeftFace(x, y, z))
+        if rightBlock.empty then side = side.concat(makeRightFace(x, y, z))
+        if backBlock.empty then side = side.concat(makeBackFace(x, y, z) )
+        if frontBlock.empty then side = side.concat(makeFrontFace(x, y, z))
+        if topBlock.empty then side = side.concat(makeTopFace(x, y, z))
     
     staticModel = new e3d.Object
     staticModel.meshes = [new e3d.Mesh(side)]
