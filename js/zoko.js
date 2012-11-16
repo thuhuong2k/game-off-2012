@@ -371,7 +371,7 @@ KeyboardController = function() {};
 
 levels = levels || {};
 
-levels.test = [["OOOO", "OOOO", "OOO^", "XOOO"], ["OOOO", "OOOO", "OO ^", "    "]];
+levels.test = [["OOOO", "OOOO", "OOX^", "XOOO"], ["OOOO", "OOOO", "OO  ", "    "], ["OOOO", "OOOO", " B ^", "    "], ["S   ", "  B ", "    ", "    "]];
 
 LevelState = function(levelData) {
   var block, blockArray, layer, row;
@@ -495,7 +495,7 @@ LevelView = function() {
   scene = new e3d.Scene;
   scene.camera = camera;
   scene.objects = [staticModel];
-  loadTextures(['wall', 'floor', 'platform'], function(textures) {
+  loadTextures(['ground', 'wall', 'floor', 'platform'], function(textures) {
     staticModel.textures = textures;
     return e3d.scene = scene;
   });
@@ -547,12 +547,44 @@ LevelView = function() {
     return makeQuad(positions, color);
   };
   buildStaticModel = function(levelState) {
-    var platformTop, side, solidTop;
+    var depth, ground, platformTop, side, solidTop, width;
+    width = levelState.width;
+    depth = levelState.depth;
+    ground = [];
     side = [];
     solidTop = [];
     platformTop = [];
     levelState.forEachBlock(function(block, x, y, z) {
       var backBlock, frontBlock, leftBlock, rightBlock, topBlock;
+      if (z === 0) {
+        if (block.empty) {
+          ground = ground.concat(makeTopFace(x, y, -1));
+        }
+        if (x === 0) {
+          ground = ground.concat(makeTopFace(-1, y, -1));
+        }
+        if (x === width - 1) {
+          ground = ground.concat(makeTopFace(x + 1, y, -1));
+        }
+        if (y === 0) {
+          ground = ground.concat(makeTopFace(x, -1, -1));
+        }
+        if (y === depth - 1) {
+          ground = ground.concat(makeTopFace(x, y + 1, -1));
+        }
+        if (x === 0 && y === 0) {
+          ground = ground.concat(makeTopFace(-1, -1, -1));
+        }
+        if (x === width - 1 && y === 0) {
+          ground = ground.concat(makeTopFace(x + 1, -1, -1));
+        }
+        if (x === 0 && y === depth - 1) {
+          ground = ground.concat(makeTopFace(-1, y + 1, -1));
+        }
+        if (x === width - 1 && y === depth - 1) {
+          ground = ground.concat(makeTopFace(x + 1, y + 1, -1));
+        }
+      }
       if (!block.empty) {
         leftBlock = levelState.blockAt(x - 1, y, z);
         rightBlock = levelState.blockAt(x + 1, y, z);
@@ -581,7 +613,7 @@ LevelView = function() {
         }
       }
     });
-    return staticModel.meshes = [new e3d.Mesh(side), new e3d.Mesh(solidTop), new e3d.Mesh(platformTop)];
+    return staticModel.meshes = [new e3d.Mesh(ground), new e3d.Mesh(side), new e3d.Mesh(solidTop), new e3d.Mesh(platformTop)];
   };
 };
 

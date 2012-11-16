@@ -4,13 +4,25 @@ levels.test = [
   [
     "OOOO"
     "OOOO"
-    "OOO^"
+    "OOX^"
     "XOOO"
   ]
   [
     "OOOO"
     "OOOO"
-    "OO ^"
+    "OO  "
+    "    "
+  ]
+  [
+    "OOOO"
+    "OOOO"
+    " B ^"
+    "    "
+  ]
+  [
+    "S   "
+    "  B "
+    "    "
     "    "
   ]
 ]

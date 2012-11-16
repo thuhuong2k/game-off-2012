@@ -25,7 +25,7 @@ LevelView = ->
   scene.camera = camera
   scene.objects = [staticModel]
   
-  loadTextures ['wall', 'floor', 'platform'], (textures) ->
+  loadTextures ['ground', 'wall', 'floor', 'platform'], (textures) ->
     staticModel.textures = textures
     e3d.scene = scene
   
@@ -89,11 +89,34 @@ LevelView = ->
     return makeQuad(positions, color)
   
   buildStaticModel = (levelState) ->
+    width = levelState.width
+    depth = levelState.depth
+    
+    ground = []
     side = []
     solidTop = []
     platformTop = []
     
     levelState.forEachBlock (block, x, y, z) ->
+      if z is 0 # Ground level
+        if block.empty
+          ground = ground.concat(makeTopFace(x, y, -1))
+        if x is 0 # Left edge
+          ground = ground.concat(makeTopFace(-1, y, -1))
+        if x is width - 1 # Right edge
+          ground = ground.concat(makeTopFace(x+1, y, -1))
+        if y is 0 # Back edge
+          ground = ground.concat(makeTopFace(x, -1, -1))
+        if y is depth - 1 # Front edge
+          ground = ground.concat(makeTopFace(x, y+1, -1))
+        if x is 0 and y is 0 # Back-left corner
+          ground = ground.concat(makeTopFace(-1, -1, -1))
+        if x is width - 1 and y is 0 # Back-right corner
+          ground = ground.concat(makeTopFace(x+1, -1, -1))
+        if x is 0 and y is depth - 1 # Front-left corner
+          ground = ground.concat(makeTopFace(-1, y+1, -1))
+        if x is width - 1 and y is depth - 1 # Front right corner
+          ground = ground.concat(makeTopFace(x+1, y+1, -1))
       if not block.empty
         leftBlock = levelState.blockAt(x-1, y, z)
         rightBlock = levelState.blockAt(x+1, y, z)
@@ -108,7 +131,8 @@ LevelView = ->
           if block instanceof SolidBlock then solidTop = solidTop.concat(makeTopFace(x, y, z))
           if block instanceof PlatformBlock then platformTop = platformTop.concat(makeTopFace(x, y, z))
     
-    staticModel.meshes = [ new e3d.Mesh(side)
+    staticModel.meshes = [ new e3d.Mesh(ground)
+                           new e3d.Mesh(side)
                            new e3d.Mesh(solidTop)
                            new e3d.Mesh(platformTop) ]
   
