@@ -1,16 +1,39 @@
+# Loads the texures specified in textureList and returns an array of loaded
+# textures via a callback function
+# TOFO: Move to a more appropriate .coffee file
+loadTextures = (textureList, callback) ->
+    nTotal = textureList.length
+    nLoaded = 0
+    textures = []
+    for name, index in textureList
+      do (name, index) -> # Create a new variable scope
+        image = new Image
+        image.onload = ->
+          textures[index] = new e3d.Texture(image)
+          callback(textures) if ++nLoaded is nTotal
+        image.src = 'res/tex/' + name + '.png'
+
+# LevelView constructor
 LevelView = ->
-  scene = new e3d.Scene
-  staticModel = null
+  staticModel = new e3d.Object
 
   camera = new e3d.Camera
   camera.distance = 16
   camera.rotation = [0.5, 0, 0]
+  
+  scene = new e3d.Scene
   scene.camera = camera
-
-  e3d.scene = scene
+  scene.objects = [staticModel]
+  
+  loadTextures ['wall', 'floor', 'platform'], (textures) ->
+    staticModel.textures = textures
+    e3d.scene = scene
+  
+  currState = null
 
   @update = (levelState) ->
-    if staticModel is null
+    if levelState isnt currState
+      currState = levelState
       buildStaticModel(levelState)
       camera.position = [ levelState.width / 2
                           levelState.depth / 2
@@ -81,11 +104,12 @@ LevelView = ->
         if rightBlock.empty then side = side.concat(makeRightFace(x, y, z))
         if backBlock.empty then side = side.concat(makeBackFace(x, y, z) )
         if frontBlock.empty then side = side.concat(makeFrontFace(x, y, z))
-        if topBlock.empty then side = side.concat(makeTopFace(x, y, z))
+        if topBlock.empty
+          if block instanceof SolidBlock then solidTop = solidTop.concat(makeTopFace(x, y, z))
+          if block instanceof PlatformBlock then platformTop = platformTop.concat(makeTopFace(x, y, z))
     
-    staticModel = new e3d.Object
-    staticModel.meshes = [new e3d.Mesh(side)]
-    
-    scene.objects = [staticModel]
+    staticModel.meshes = [ new e3d.Mesh(side)
+                           new e3d.Mesh(solidTop)
+                           new e3d.Mesh(platformTop) ]
   
   return

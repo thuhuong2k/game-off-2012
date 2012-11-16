@@ -61,8 +61,10 @@
       
       
       e3d.onrender = function () {
-        camera = e3d.scene.camera;
-        camera.rotation = vec.add(camera.rotation, [0.0, 0.0, 0.007]);
+        if ( e3d.scene !== null ) {
+          camera = e3d.scene.camera;
+          camera.rotation = vec.add(camera.rotation, [0.0, 0.0, 0.007]);
+        }
       };
       
       e3d.run();
