@@ -18,7 +18,7 @@ LevelView = ->
   staticModel = new e3d.Object
 
   camera = new e3d.Camera
-  camera.distance = 16
+  camera.distance = 12
   camera.rotation = [0.5, 0, 0]
   
   scene = new e3d.Scene
