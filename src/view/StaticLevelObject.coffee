@@ -1,4 +1,10 @@
-buildStaticLevelModel = (levelState) ->
+levelTextures = []
+
+setLevelTextures = (textures) ->
+  for texture, index in textures
+    levelTextures[index] = texture
+
+StaticLevelObject = (levelState) ->
   width = levelState.width
   depth = levelState.depth
   
@@ -44,7 +50,10 @@ buildStaticLevelModel = (levelState) ->
         if block.type is 'solid' then solidTop = solidTop.concat(makeTopFace(x, y, z))
         if block.type is 'platform' then platformTop = platformTop.concat(makeTopFace(x, y, z))
   
-  return [ new e3d.Mesh(ground)
-           new e3d.Mesh(side)
-           new e3d.Mesh(solidTop)
-           new e3d.Mesh(platformTop) ]
+  object = new e3d.Object
+  object.meshes = [ new e3d.Mesh(ground)
+                    new e3d.Mesh(side)
+                    new e3d.Mesh(solidTop)
+                    new e3d.Mesh(platformTop) ]
+  object.textures = levelTextures
+  return object

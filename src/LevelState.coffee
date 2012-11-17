@@ -4,13 +4,23 @@ LevelState = (levelData) ->
 		              for row in layer
                     for block in row
                       switch block
-                        when 'O' then new SolidBlock()
-                        when 'X' then new PlatformBlock()
-                        else new EmptyBlock()
+                        when 'O' then new SolidBlock
+                        when 'X' then new PlatformBlock
+                        when 'B' then new BoxBlock
+                        else new EmptyBlock
   
   @height = blockArray.length
   @depth = blockArray[0].length
   @width = blockArray[0][0].length
+  
+  @forEach = (type, callback) ->
+    result = []
+    for layer, z in blockArray
+      for row, y in layer
+        for block, x in row
+          if block.type is type
+            result.push callback(block, x, y, z)
+    return result
   
   @forEachBlock = (callback) ->
     for layer, z in blockArray
@@ -44,4 +54,9 @@ SolidBlock = ->
 PlatformBlock = ->
   @type = 'platform'
   @static = true
+  return
+
+BoxBlock = ->
+  @type = 'box'
+  @static = false
   return

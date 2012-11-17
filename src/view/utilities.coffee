@@ -1,3 +1,10 @@
+# Loads the texture with the specified name and returns the loaded texture
+# via a callback function
+loadTexture = (name, callback) ->
+  image = new Image
+  image.onload = -> callback(new e3d.Texture(image))
+  image.src = 'res/tex/' + name + '.png'
+
 # Loads the texures specified in textureList and returns an array of loaded
 # textures via a callback function
 loadTextures = (textureList, callback) ->
@@ -6,11 +13,9 @@ loadTextures = (textureList, callback) ->
     textures = []
     for name, index in textureList
       do (name, index) -> # Create a new variable scope
-        image = new Image
-        image.onload = ->
-          textures[index] = new e3d.Texture(image)
+        loadTexture name, (texture) ->
+          textures[index] = texture
           callback(textures) if ++nLoaded is nTotal
-        image.src = 'res/tex/' + name + '.png'
 
 # Makes a quadrangle out of two triangles
 # Vertex positions should be specified in the following order:
@@ -60,3 +65,11 @@ makeTopFace = (x, y, z) ->
   positions = [ [x, y, z+1], [x+1, y, z+1], [x, y+1, z+1], [x+1, y+1, z+1] ]
   color = [1.0, 1.0, 1.0]
   return makeQuad(positions, color)
+
+# Creates a box at [x, y, z]
+makeBox = (x, y, z) ->
+  return [].concat( makeLeftFace(x, y, z),
+                    makeRightFace(x, y, z),
+                    makeBackFace(x, y, z),
+                    makeFrontFace(x, y, z),
+                    makeTopFace(x, y, z) )
