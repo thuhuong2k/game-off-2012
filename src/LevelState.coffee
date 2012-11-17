@@ -12,11 +12,16 @@ LevelState = (levelData) ->
   @depth = blockArray[0].length
   @width = blockArray[0][0].length
   
-  @forEachBlock = ( callback ) ->
+  @forEachBlock = (callback) ->
     for layer, z in blockArray
       for row, y in layer
         for block, x in row
           callback(block, x, y, z)
+  
+  @forEachBlockInLayer = (layer, callback) ->
+    for row, y in blockArray[layer]
+      for block, x in row
+        callback(block, x, y)
   
   @blockAt = (x, y, z) ->
     if x < 0 or x >= @width then return new EmptyBlock
@@ -27,19 +32,16 @@ LevelState = (levelData) ->
   return
 
 EmptyBlock = ->
-
-  @empty = true
-
+  @type = 'empty'
+  @static = false
   return
 
 SolidBlock = ->
-
-  @empty = false
-
+  @type = 'solid'
+  @static = true
   return
 
 PlatformBlock = ->
-
-  @empty = false
-
+  @type = 'platform'
+  @static = true
   return
