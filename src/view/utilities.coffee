@@ -65,10 +65,14 @@ makeTopFace = (x, y, z) ->
   color = [1.0, 1.0, 1.0]
   return makeQuad(positions, color)
 
-# Creates a box at [x, y, z]
-makeBox = (x, y, z) ->
+# Creates a box without lid at [x, y, z]
+makeLidlessBox = (x, y, z) ->
   return [].concat( makeLeftFace(x, y, z),
                     makeRightFace(x, y, z),
                     makeBackFace(x, y, z),
-                    makeFrontFace(x, y, z),
+                    makeFrontFace(x, y, z) )
+
+# Creates a box at [x, y, z]
+makeBox = (x, y, z) ->
+  return [].concat( makeLidlessBox(x, y, z),
                     makeTopFace(x, y, z) )

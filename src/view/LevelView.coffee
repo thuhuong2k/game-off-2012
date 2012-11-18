@@ -9,9 +9,11 @@ LevelView = ->
   
   loadTextures ['ground', 'wall', 'floor', 'platform'], (textures) ->
     setLevelTextures(textures)
-    loadTexture 'box', (texture) ->
-      setBoxTexture( texture )
-      e3d.scene = scene
+    loadTextures ['box'], (textures) ->
+      setBoxTextures(textures)
+      loadTextures ['lift', 'lifttop'], (textures) ->
+        setLiftTextures(textures)
+        e3d.scene = scene
   
   currState = null
 
@@ -26,7 +28,11 @@ LevelView = ->
       boxGroup.children = levelState.forEach 'box',
                                              (box, x, y, z) ->
                                                new BoxObject(x, y, z)
-      objects = [levelModel, boxGroup]
+      liftGroup = new e3d.Object
+      liftGroup.children = levelState.forEach 'lift',
+                                              (lift, x, y, z) ->
+                                                new LiftObject(x, y, z)
+      objects = [levelModel, boxGroup, liftGroup]
       
       scene.objects = objects
   
