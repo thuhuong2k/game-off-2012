@@ -10,19 +10,16 @@
   </body>
   <script src="js/zepto.min.js"></script>
   <script src="js/zoko.js"></script>
-  <script src="res/levels.js"></script>
   <script>
     window.onload = function() {
       canvas = document.getElementById('zoko');
       e3d.init(canvas);
       
-      levelState = new LevelState(levels['test']);
-      levelView = new LevelView();
-      
-      //levelState.observerList = [levelView];
-      //levelState.notifyObservers();
-
-      levelView.update(levelState);
+      loadJson('lev/test.json', function (level) {
+        levelState = new LevelState(level);
+        levelView = new LevelView();
+        levelView.update(levelState);
+      });
       
       e3d.onrender = function () {
         if ( e3d.scene !== null ) {

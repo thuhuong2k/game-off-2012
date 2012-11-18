@@ -1,9 +1,8 @@
 # Loads the texture with the specified name and returns the loaded texture
 # via a callback function
 loadTexture = (name, callback) ->
-  image = new Image
-  image.onload = -> callback(new e3d.Texture(image))
-  image.src = 'res/tex/' + name + '.png'
+  filename = 'tex/' + name + '.png'
+  loadImage filename, (image) -> callback(new e3d.Texture(image))
 
 # Loads the texures specified in textureList and returns an array of loaded
 # textures via a callback function
