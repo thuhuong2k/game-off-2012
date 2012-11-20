@@ -1,20 +1,6 @@
-# Loads the texture with the specified name and returns the loaded texture
-# via a callback function
-loadTexture = (name, callback) ->
-  filename = 'tex/' + name + '.png'
-  loadImage filename, (image) -> callback(new e3d.Texture(image))
-
-# Loads the texures specified in textureList and returns an array of loaded
-# textures via a callback function
-loadTextures = (textureList, callback) ->
-    nTotal = textureList.length
-    nLoaded = 0
-    textures = []
-    for name, index in textureList
-      do (name, index) -> # Create a new variable scope
-        loadTexture name, (texture) ->
-          textures[index] = texture
-          callback(textures) if ++nLoaded is nTotal
+# Creates an array of textures from an array of images
+createTextures = (images) ->
+  for image in images then new e3d.Texture(image)
 
 # Makes a quadrangle out of two triangles
 # Vertex positions should be specified in the following order:

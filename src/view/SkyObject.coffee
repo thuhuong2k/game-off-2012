@@ -8,7 +8,7 @@ setSkyTextures = (textures) ->
 SkyObject = (x, y, z) ->
   if skyMeshes.length is 0
     skyMeshes[0] = null
-    loadJson 'mod/sky.json', (sky) ->
+    loadJsonFile 'mod/sky.json', (sky) ->
       skyMeshes[0] = new e3d.Mesh(sky)
   
   object = new e3d.Object

@@ -7,15 +7,18 @@ LevelView = ->
   scene = new e3d.Scene
   scene.camera = camera
   
-  loadTextures ['sky'], (textures) ->
-    setSkyTextures(textures)
-    loadTextures ['wall', 'floor', 'platform'], (textures) ->
-      setLevelTextures(textures)
-      loadTextures ['box'], (textures) ->
-        setBoxTextures(textures)
-        loadTextures ['lift', 'lifttop'], (textures) ->
-          setLiftTextures(textures)
-          e3d.scene = scene
+  imagefiles =
+    'sky': ['/tex/sky.png']
+    'level': ['/tex/wall.png', '/tex/floor.png', '/tex/platform.png']
+    'box': ['/tex/box.png']
+    'lift': ['/tex/lift.png', '/tex/lifttop.png']
+  
+  loadImageFiles imagefiles, (images) ->
+    setSkyTextures(createTextures(images['sky']))
+    setLevelTextures(createTextures(images['level']))
+    setBoxTextures(createTextures(images['box']))
+    setLiftTextures(createTextures(images['lift']))
+    e3d.scene = scene
   
   currState = null
 
