@@ -7,22 +7,27 @@ LevelView = ->
   scene = new e3d.Scene
   scene.camera = camera
   
-  loadTextures ['ground', 'wall', 'floor', 'platform'], (textures) ->
-    setLevelTextures(textures)
-    loadTextures ['box'], (textures) ->
-      setBoxTextures(textures)
-      loadTextures ['lift', 'lifttop'], (textures) ->
-        setLiftTextures(textures)
-        e3d.scene = scene
+  loadTextures ['sky'], (textures) ->
+    setSkyTextures(textures)
+    loadTextures ['wall', 'floor', 'platform'], (textures) ->
+      setLevelTextures(textures)
+      loadTextures ['box'], (textures) ->
+        setBoxTextures(textures)
+        loadTextures ['lift', 'lifttop'], (textures) ->
+          setLiftTextures(textures)
+          e3d.scene = scene
   
   currState = null
 
   @update = (levelState) ->
     if levelState isnt currState
       currState = levelState
-      camera.position = [ levelState.width / 2
-                          levelState.depth / 2
-                          levelState.height / 2 ]
+      center = [ levelState.width / 2
+                 levelState.depth / 2
+                 levelState.height / 2 ]
+      camera.position = center
+      skySphere = new SkyObject
+      skySphere.position = center
       levelModel = new StaticLevelObject(levelState)
       boxGroup = new e3d.Object
       boxGroup.children = levelState.forEach 'box',
@@ -32,7 +37,7 @@ LevelView = ->
       liftGroup.children = levelState.forEach 'lift',
                                               (lift, x, y, z) ->
                                                 new LiftObject(x, y, z)
-      objects = [levelModel, boxGroup, liftGroup]
+      objects = [skySphere, levelModel, boxGroup, liftGroup]
       
       scene.objects = objects
   

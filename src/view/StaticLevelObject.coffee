@@ -51,8 +51,7 @@ StaticLevelObject = (levelState) ->
         if block.type is 'platform' then platformTop = platformTop.concat(makeTopFace(x, y, z))
   
   object = new e3d.Object
-  object.meshes = [ new e3d.Mesh(ground)
-                    new e3d.Mesh(side)
+  object.meshes = [ new e3d.Mesh(side)
                     new e3d.Mesh(solidTop)
                     new e3d.Mesh(platformTop) ]
   object.textures = levelTextures
