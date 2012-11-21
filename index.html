@@ -21,6 +21,7 @@
         levelState = new LevelState(level);
         levelView = new LevelView();
         levelView.update(levelState);
+        new KeyboardController(levelState);
       });
 
       e3d.onrender = function () {
@@ -29,6 +30,7 @@
           // camera.rotation = vec.add(camera.rotation, [0.0, 0.0, 0.007]);
         }
       };
+
 
       e3d.run();
     }
