@@ -16,20 +16,20 @@
     window.onload = function() {
       canvas = document.getElementById('zoko');
       e3d.init(canvas);
-      
+
       loadJsonFile('lev/test.json', function (level) {
         levelState = new LevelState(level);
         levelView = new LevelView();
         levelView.update(levelState);
       });
-      
+
       e3d.onrender = function () {
         if ( e3d.scene !== null ) {
           camera = e3d.scene.camera;
-          camera.rotation = vec.add(camera.rotation, [0.0, 0.0, 0.007]);
+          // camera.rotation = vec.add(camera.rotation, [0.0, 0.0, 0.007]);
         }
       };
-      
+
       e3d.run();
     }
   </script>
