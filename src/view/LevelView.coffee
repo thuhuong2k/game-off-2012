@@ -36,12 +36,12 @@ LevelView = ->
       levelModel = new StaticLevelObject(levelState)
       boxGroup = new e3d.Object
       boxGroup.children = levelState.forEach 'box',
-                                             (box, x, y, z) ->
-                                               new BoxObject(x, y, z)
+                                             (box, position) ->
+                                               new BoxObject(box)
       liftGroup = new e3d.Object
       liftGroup.children = levelState.forEach 'lift',
                                               (lift, x, y, z) ->
-                                                new LiftObject(x, y, z)
+                                                new LiftObject(lift)
       player = new PlayerObject(levelState.player)
 
       objects = [skySphere, levelModel, boxGroup, liftGroup, player]

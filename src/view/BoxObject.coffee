@@ -5,13 +5,13 @@ setBoxTextures = (textures) ->
   for texture, index in textures
     boxTextures[index] = texture
 
-BoxObject = (x, y, z) ->
+BoxObject = (box) ->
   if boxMeshes.length is 0
-    boxMeshes = [new e3d.Mesh(makeBox(0,0,0))]
+    boxMeshes = [new e3d.Mesh(makeBox())]
   
   object = new e3d.Object
   object.meshes = boxMeshes
   object.textures = boxTextures
-  object.position = [x, y, z]
+  object.position = box.position
   
   return object
