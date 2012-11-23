@@ -18,9 +18,10 @@
       e3d.init(canvas);
 
       loadJsonFile('lev/test.json', function (level) {
-        levelState = new LevelState(level);
         levelView = new LevelView();
-        levelView.update(levelState);
+        levelState = new LevelState(level);
+        levelState.observers = [levelView];
+        levelState.notifyObservers();
         new KeyboardController(levelState);
       });
 
