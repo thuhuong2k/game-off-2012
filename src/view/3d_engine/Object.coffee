@@ -1,20 +1,20 @@
 e3d = e3d || {}
 
-# 3D object constructor
-e3d.Object = ->
-  gl = e3d.gl
-  program = e3d.program.mesh
+class e3d.Object
+  constructor: ->
+    @position = [0,0,0]
+    @rotation = [0,0,0]
+    @scale = [1,1,1]
+    
+    @meshes = []
+    @textures = []
+    
+    @children = []
   
-  @position = [0,0,0]
-  @rotation = [0,0,0]
-  @scale = [1,1,1]
-  
-  @meshes = []
-  @textures = []
-  
-  @children = []
-  
-  @render = (matrix) ->
+  render: (matrix) ->
+    gl = e3d.gl
+    program = e3d.program.mesh
+    
     matrix = mat.translate(matrix, @position)
     matrix = mat.rotateX(matrix, @rotation[0])
     matrix = mat.rotateY(matrix, @rotation[1])
@@ -33,5 +33,3 @@ e3d.Object = ->
     for child in @children
       if child?
         child.render(matrix)
-  
-  return

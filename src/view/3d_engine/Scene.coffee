@@ -1,14 +1,13 @@
 e3d = e3d || {}
 
-# 3D scene constructor
-e3d.Scene = ->
-  gl = e3d.gl
-  program = e3d.program.mesh
+class e3d.Scene
+  constructor: ->
+    @objects = []
+    @camera = null
   
-  @objects = []
-  @camera = null
-
-  @render = ->
+  render: ->
+    program = e3d.program.mesh
+    
     if @camera?
       program.begin()
       matrix = @camera.createMatrix()
@@ -16,5 +15,3 @@ e3d.Scene = ->
         if object?
           object.render(matrix)
       program.end()
-
-  return

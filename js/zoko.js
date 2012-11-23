@@ -609,20 +609,23 @@ loadResourceFiles = function(filenames, callback) {
 
 e3d = e3d || {};
 
-e3d.Camera = function() {
-  var aspect, eye, far, fovy, near, target, up;
-  this.position = [0, 0, 0];
-  this.rotation = [0, 0, 0];
-  this.distance = 0;
-  fovy = 45;
-  aspect = e3d.width / e3d.height;
-  near = 0.1;
-  far = 100;
-  eye = [0, 0, 0];
-  target = [0, -1, 0];
-  up = [0, 0, 1];
-  this.createMatrix = function() {
-    var matrix;
+e3d.Camera = (function() {
+
+  function Camera() {
+    this.position = [0, 0, 0];
+    this.rotation = [0, 0, 0];
+    this.distance = 0;
+  }
+
+  Camera.prototype.createMatrix = function() {
+    var aspect, eye, far, fovy, matrix, near, target, up;
+    fovy = 45;
+    aspect = e3d.width / e3d.height;
+    near = 0.1;
+    far = 100;
+    eye = [0, 0, 0];
+    target = [0, -1, 0];
+    up = [0, 0, 1];
     matrix = mat.perspective(fovy, aspect, near, far);
     matrix = mat.lookat(matrix, eye, target, up);
     matrix = mat.translate(matrix, [0, -this.distance, 0]);
@@ -632,7 +635,10 @@ e3d.Camera = function() {
     matrix = mat.translate(matrix, vec.neg(this.position));
     return matrix;
   };
-};
+
+  return Camera;
+
+})();
 
 e3d = e3d || {};
 
@@ -754,37 +760,50 @@ mat = {
 
 e3d = e3d || {};
 
-e3d.Mesh = function(data) {
-  var gl, nvertices, program, vertexbuffer;
-  gl = e3d.gl;
-  program = e3d.program.mesh;
-  vertexbuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, vertexbuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data), gl.STATIC_DRAW);
-  nvertices = data.length / 8;
-  this.render = function() {
-    gl.bindBuffer(gl.ARRAY_BUFFER, vertexbuffer);
+e3d.Mesh = (function() {
+
+  function Mesh(data) {
+    var gl, program;
+    gl = e3d.gl;
+    program = e3d.program.mesh;
+    this.vertexbuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data), gl.STATIC_DRAW);
+    this.nvertices = data.length / 8;
+  }
+
+  Mesh.prototype.render = function() {
+    var gl, program;
+    gl = e3d.gl;
+    program = e3d.program.mesh;
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
     gl.vertexAttribPointer(program.aPositionLoc, 3, gl.FLOAT, false, 32, 0);
     gl.vertexAttribPointer(program.aTexCoordLoc, 2, gl.FLOAT, false, 32, 12);
     gl.vertexAttribPointer(program.aColorLoc, 3, gl.FLOAT, false, 32, 20);
-    return gl.drawArrays(gl.TRIANGLES, 0, nvertices);
+    return gl.drawArrays(gl.TRIANGLES, 0, this.nvertices);
   };
-};
+
+  return Mesh;
+
+})();
 
 e3d = e3d || {};
 
-e3d.Object = function() {
-  var gl, program;
-  gl = e3d.gl;
-  program = e3d.program.mesh;
-  this.position = [0, 0, 0];
-  this.rotation = [0, 0, 0];
-  this.scale = [1, 1, 1];
-  this.meshes = [];
-  this.textures = [];
-  this.children = [];
-  this.render = function(matrix) {
-    var child, i, mesh, _i, _j, _len, _len1, _ref, _ref1, _results;
+e3d.Object = (function() {
+
+  function Object() {
+    this.position = [0, 0, 0];
+    this.rotation = [0, 0, 0];
+    this.scale = [1, 1, 1];
+    this.meshes = [];
+    this.textures = [];
+    this.children = [];
+  }
+
+  Object.prototype.render = function(matrix) {
+    var child, gl, i, mesh, program, _i, _j, _len, _len1, _ref, _ref1, _results;
+    gl = e3d.gl;
+    program = e3d.program.mesh;
     matrix = mat.translate(matrix, this.position);
     matrix = mat.rotateX(matrix, this.rotation[0]);
     matrix = mat.rotateY(matrix, this.rotation[1]);
@@ -814,18 +833,23 @@ e3d.Object = function() {
     }
     return _results;
   };
-};
+
+  return Object;
+
+})();
 
 e3d = e3d || {};
 
-e3d.Scene = function() {
-  var gl, program;
-  gl = e3d.gl;
-  program = e3d.program.mesh;
-  this.objects = [];
-  this.camera = null;
-  this.render = function() {
-    var matrix, object, _i, _len, _ref;
+e3d.Scene = (function() {
+
+  function Scene() {
+    this.objects = [];
+    this.camera = null;
+  }
+
+  Scene.prototype.render = function() {
+    var matrix, object, program, _i, _len, _ref;
+    program = e3d.program.mesh;
     if (this.camera != null) {
       program.begin();
       matrix = this.camera.createMatrix();
@@ -839,7 +863,10 @@ e3d.Scene = function() {
       return program.end();
     }
   };
-};
+
+  return Scene;
+
+})();
 
 e3d = e3d || {};
 
@@ -906,34 +933,79 @@ e3d.compileProgram = function(vertexSource, fragmentSource) {
 
 e3d = e3d || {};
 
-e3d.Texture = function(image) {
-  var gl, pixels, program, texture;
-  gl = e3d.gl;
-  program = e3d.program.mesh;
-  texture = gl.createTexture();
-  gl.bindTexture(gl.TEXTURE_2D, texture);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-  if (image != null) {
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-    this.width = image.width;
-    this.height = image.height;
-  } else {
-    pixels = new Uint8Array([255, 255, 255, 255]);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
-    this.width = 0;
-    this.height = 0;
+e3d.Texture = (function() {
+
+  function Texture(image) {
+    var gl, pixels;
+    gl = e3d.gl;
+    this.texture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, this.texture);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    if (image != null) {
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+      this.width = image.width;
+      this.height = image.height;
+    } else {
+      pixels = new Uint8Array([255, 255, 255, 255]);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+      this.width = 0;
+      this.height = 0;
+    }
   }
-  this.use = function() {
-    return gl.bindTexture(gl.TEXTURE_2D, texture);
+
+  Texture.prototype.use = function() {
+    var gl;
+    gl = e3d.gl;
+    return gl.bindTexture(gl.TEXTURE_2D, this.texture);
   };
-  this.free = function() {
-    if (texture != null) {
-      gl.deleteTexture(texture);
-      return texture = null;
+
+  Texture.prototype.free = function() {
+    var gl;
+    gl = e3d.gl;
+    if (this.texture != null) {
+      gl.deleteTexture(this.texture);
+      return this.texture = null;
     }
   };
-};
+
+  return Texture;
+
+})();
+
+/*
+# Texture constructor
+e3d.Texture = (image) ->
+  gl = e3d.gl
+  program = e3d.program.mesh
+  
+  texture = gl.createTexture()
+  gl.bindTexture(gl.TEXTURE_2D, texture)
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST)
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST)
+  
+  if image?
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image)
+    @width = image.width
+    @height = image.height
+  else
+    # Default to a simple single white pixel texture
+    pixels = new Uint8Array([255,255,255,255])
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, pixels)
+    @width = 0
+    @height = 0
+  
+  @use = ->
+    gl.bindTexture(gl.TEXTURE_2D, texture)
+  
+  @free = ->
+    if texture?
+      gl.deleteTexture(texture)
+      texture = null
+  
+  return
+*/
+
 
 vec = {
   add: function(u, v) {
@@ -994,35 +1066,40 @@ BoxObject = function(box) {
   return object;
 };
 
-LevelView = function() {
-  var camera, currState, imagefiles, scene;
-  camera = new e3d.Camera;
-  camera.distance = 12;
-  camera.rotation = [0.5, 0, 0];
-  scene = new e3d.Scene;
-  scene.camera = camera;
-  imagefiles = {
-    'sky': ['/tex/sky.png'],
-    'level': ['/tex/wall.png', '/tex/floor.png', '/tex/platform.png'],
-    'box': ['/tex/box.png'],
-    'lift': ['/tex/lift.png', '/tex/lifttop.png'],
-    'player': ['/tex/player.png']
-  };
-  loadImageFiles(imagefiles, function(images) {
-    setSkyTextures(createTextures(images['sky']));
-    setLevelTextures(createTextures(images['level']));
-    setBoxTextures(createTextures(images['box']));
-    setLiftTextures(createTextures(images['lift']));
-    setPlayerTextures(createTextures(images['player']));
-    return e3d.scene = scene;
-  });
-  currState = null;
-  this.update = function(levelState) {
-    var boxGroup, center, levelModel, liftGroup, objects, player, skySphere;
-    if (levelState !== currState) {
-      currState = levelState;
+LevelView = (function() {
+
+  function LevelView() {
+    var imagefiles, instance;
+    this.camera = new e3d.Camera;
+    this.camera.distance = 12;
+    this.camera.rotation = [0.5, 0, 0];
+    this.scene = new e3d.Scene;
+    this.scene.camera = this.camera;
+    imagefiles = {
+      'sky': ['/tex/sky.png'],
+      'level': ['/tex/wall.png', '/tex/floor.png', '/tex/platform.png'],
+      'box': ['/tex/box.png'],
+      'lift': ['/tex/lift.png', '/tex/lifttop.png'],
+      'player': ['/tex/player.png']
+    };
+    instance = this;
+    loadImageFiles(imagefiles, function(images) {
+      setSkyTextures(createTextures(images['sky']));
+      setLevelTextures(createTextures(images['level']));
+      setBoxTextures(createTextures(images['box']));
+      setLiftTextures(createTextures(images['lift']));
+      setPlayerTextures(createTextures(images['player']));
+      return e3d.scene = instance.scene;
+    });
+    this.currState = null;
+  }
+
+  LevelView.prototype.update = function(levelState) {
+    var boxGroup, center, levelModel, liftGroup, skySphere;
+    if (levelState !== this.currState) {
+      this.currState = levelState;
       center = [levelState.width / 2, levelState.depth / 2, levelState.height / 2];
-      camera.position = center;
+      this.camera.position = center;
       skySphere = new SkyObject;
       skySphere.position = center;
       levelModel = new StaticLevelObject(levelState);
@@ -1034,12 +1111,14 @@ LevelView = function() {
       liftGroup.children = levelState.forEach('lift', function(lift, x, y, z) {
         return new LiftObject(lift);
       });
-      player = new PlayerObject(levelState.player);
-      objects = [skySphere, levelModel, boxGroup, liftGroup, player];
-      return scene.objects = objects;
+      this.player = new PlayerObject(levelState.player);
+      return this.scene.objects = [skySphere, levelModel, boxGroup, liftGroup, this.player];
     }
   };
-};
+
+  return LevelView;
+
+})();
 
 liftMeshes = [];
 
