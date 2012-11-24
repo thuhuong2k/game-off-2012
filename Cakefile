@@ -23,8 +23,6 @@ task 'build', 'build js file', ->
     if required_order.indexOf(file) is -1
       command += ' ' + file
   
-  console.log command
-  
   exec command, ( err, stdout, stderr ) ->
     throw err if err
     console.log 'Done!'
