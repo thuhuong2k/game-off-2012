@@ -6,7 +6,7 @@ class BoxObject extends e3d.Object
     for texture, index in textures
       boxTextures[index] = texture
   
-  constructor: (box) ->
+  constructor: (@box) ->
     super()
     
     if boxMeshes.length is 0
@@ -14,4 +14,7 @@ class BoxObject extends e3d.Object
     
     @meshes = boxMeshes
     @textures = boxTextures
-    @position = box.position
+  
+  render: (matrix) ->
+    @position = @box.position
+    super(matrix)

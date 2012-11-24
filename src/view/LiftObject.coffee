@@ -6,7 +6,7 @@ class LiftObject extends e3d.Object
     for texture, index in textures
       liftTextures[index] = texture
   
-  constructor: (lift) ->
+  constructor: (@lift) ->
     super()
     
     if liftMeshes.length is 0
@@ -15,4 +15,7 @@ class LiftObject extends e3d.Object
     
     @meshes = liftMeshes
     @textures = liftTextures
-    @position = lift.position
+  
+  render: (matrix) ->
+    @position = @lift.position
+    super(matrix)

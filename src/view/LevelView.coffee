@@ -25,31 +25,33 @@ class LevelView
     
     @currState = null
   
+  build: (levelState) ->
+    center = [ levelState.width / 2
+               levelState.depth / 2
+               levelState.height / 2 ]
+    
+    @camera.position = center
+    
+    skySphere = new SkyObject
+    skySphere.position = center
+    
+    levelModel = new StaticLevelObject(levelState)
+    
+    boxGroup = new e3d.Object
+    boxGroup.children = levelState.forEach 'box',
+                                           (box, position) ->
+                                             new BoxObject(box)
+    
+    liftGroup = new e3d.Object
+    liftGroup.children = levelState.forEach 'lift',
+                                            (lift, x, y, z) ->
+                                              new LiftObject(lift)
+    
+    @player = new PlayerObject(levelState.player)
+    
+    @scene.objects = [skySphere, levelModel, boxGroup, liftGroup, @player]
+  
   update: (levelState) ->
     if levelState isnt @currState
       @currState = levelState
-      
-      center = [ levelState.width / 2
-                 levelState.depth / 2
-                 levelState.height / 2 ]
-      
-      @camera.position = center
-      
-      skySphere = new SkyObject
-      skySphere.position = center
-      
-      levelModel = new StaticLevelObject(levelState)
-      
-      boxGroup = new e3d.Object
-      boxGroup.children = levelState.forEach 'box',
-                                             (box, position) ->
-                                               new BoxObject(box)
-      
-      liftGroup = new e3d.Object
-      liftGroup.children = levelState.forEach 'lift',
-                                              (lift, x, y, z) ->
-                                                new LiftObject(lift)
-      
-      @player = new PlayerObject(levelState.player)
-      
-      @scene.objects = [skySphere, levelModel, boxGroup, liftGroup, @player]
+      @build(levelState)

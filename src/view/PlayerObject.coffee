@@ -6,7 +6,7 @@ class PlayerObject extends e3d.Object
     for texture, index in textures
       playerTextures[index] = texture
   
-  constructor: (player) ->
+  constructor: (@player) ->
     super()
     
     if playerMeshes.length is 0
@@ -14,4 +14,7 @@ class PlayerObject extends e3d.Object
     
     @meshes = playerMeshes
     @textures = playerTextures
-    @position = player.position
+  
+  render: (matrix) ->
+    @position = @player.position
+    super(matrix)

@@ -60,7 +60,13 @@ EmptyBlock = (function() {
   }
 
   EmptyBlock.prototype.move = function() {
-    return this.level.blockBelow(this.position) !== 'empty';
+    var below;
+    below = this.level.blockBelow(this.position);
+    return below.type !== 'empty';
+  };
+
+  EmptyBlock.prototype.update = function() {
+    return false;
   };
 
   return EmptyBlock;
@@ -79,6 +85,10 @@ SolidBlock = (function() {
     return false;
   };
 
+  SolidBlock.prototype.update = function() {
+    return false;
+  };
+
   return SolidBlock;
 
 })();
@@ -92,6 +102,10 @@ PlatformBlock = (function() {
   PlatformBlock.prototype["static"] = true;
 
   PlatformBlock.prototype.move = function() {
+    return false;
+  };
+
+  PlatformBlock.prototype.update = function() {
     return false;
   };
 
@@ -125,6 +139,12 @@ BoxBlock = (function() {
     return false;
   };
 
+  BoxBlock.prototype.update = function() {
+    var gravity;
+    gravity = 1;
+    return this.move([0, 0, -1], gravity);
+  };
+
   return BoxBlock;
 
 })();
@@ -146,6 +166,10 @@ LiftBlock = (function() {
     return false;
   };
 
+  LiftBlock.prototype.update = function() {
+    return false;
+  };
+
   return LiftBlock;
 
 })();
@@ -161,15 +185,21 @@ Player = (function() {
     this.position = position;
   }
 
-  Player.prototype.move = function(direction) {
+  Player.prototype.move = function(direction, force) {
     var here, next;
     here = this.position;
     next = vec.add(here, direction);
-    if (this.level.blockAt(next).move(direction, 1)) {
+    if (this.level.blockAt(next).move(direction, force)) {
       this.level.swapBlocksAt(here, next);
       return true;
     }
     return false;
+  };
+
+  Player.prototype.update = function() {
+    var gravity;
+    gravity = 1;
+    return this.move([0, 0, -1], gravity);
   };
 
   return Player;
@@ -322,12 +352,16 @@ LevelState = (function(_super) {
   };
 
   LevelState.prototype.swapBlocksAt = function(position1, position2) {
-    this.setBlockAt(position1, this.blockAt(position2));
-    return this.setBlockAt(position2, this.blockAt(position1));
+    var block1, block2;
+    block1 = this.blockAt(position1);
+    block2 = this.blockAt(position2);
+    this.setBlockAt(position1, block2);
+    return this.setBlockAt(position2, block1);
   };
 
   LevelState.prototype.movePlayer = function(direction) {
-    return this.player.move((function() {
+    var force, offset;
+    offset = (function() {
       switch (direction) {
         case 'left':
           return [-1, 0, 0];
@@ -338,7 +372,21 @@ LevelState = (function(_super) {
         case 'down':
           return [0, 1, 0];
       }
-    })());
+    })();
+    force = 1;
+    if (this.player.move(offset, force)) {
+      while (this.update()) {}
+      return undefined;
+    }
+  };
+
+  LevelState.prototype.update = function() {
+    var changed;
+    changed = false;
+    this.forEachBlock(function(block) {
+      return changed = changed || block.update();
+    });
+    return changed;
   };
 
   return LevelState;
@@ -1026,14 +1074,19 @@ BoxObject = (function(_super) {
   };
 
   function BoxObject(box) {
+    this.box = box;
     BoxObject.__super__.constructor.call(this);
     if (boxMeshes.length === 0) {
       boxMeshes = [new e3d.Mesh(makeBox())];
     }
     this.meshes = boxMeshes;
     this.textures = boxTextures;
-    this.position = box.position;
   }
+
+  BoxObject.prototype.render = function(matrix) {
+    this.position = this.box.position;
+    return BoxObject.__super__.render.call(this, matrix);
+  };
 
   return BoxObject;
 
@@ -1067,25 +1120,29 @@ LevelView = (function() {
     this.currState = null;
   }
 
-  LevelView.prototype.update = function(levelState) {
+  LevelView.prototype.build = function(levelState) {
     var boxGroup, center, levelModel, liftGroup, skySphere;
+    center = [levelState.width / 2, levelState.depth / 2, levelState.height / 2];
+    this.camera.position = center;
+    skySphere = new SkyObject;
+    skySphere.position = center;
+    levelModel = new StaticLevelObject(levelState);
+    boxGroup = new e3d.Object;
+    boxGroup.children = levelState.forEach('box', function(box, position) {
+      return new BoxObject(box);
+    });
+    liftGroup = new e3d.Object;
+    liftGroup.children = levelState.forEach('lift', function(lift, x, y, z) {
+      return new LiftObject(lift);
+    });
+    this.player = new PlayerObject(levelState.player);
+    return this.scene.objects = [skySphere, levelModel, boxGroup, liftGroup, this.player];
+  };
+
+  LevelView.prototype.update = function(levelState) {
     if (levelState !== this.currState) {
       this.currState = levelState;
-      center = [levelState.width / 2, levelState.depth / 2, levelState.height / 2];
-      this.camera.position = center;
-      skySphere = new SkyObject;
-      skySphere.position = center;
-      levelModel = new StaticLevelObject(levelState);
-      boxGroup = new e3d.Object;
-      boxGroup.children = levelState.forEach('box', function(box, position) {
-        return new BoxObject(box);
-      });
-      liftGroup = new e3d.Object;
-      liftGroup.children = levelState.forEach('lift', function(lift, x, y, z) {
-        return new LiftObject(lift);
-      });
-      this.player = new PlayerObject(levelState.player);
-      return this.scene.objects = [skySphere, levelModel, boxGroup, liftGroup, this.player];
+      return this.build(levelState);
     }
   };
 
@@ -1113,14 +1170,19 @@ LiftObject = (function(_super) {
   };
 
   function LiftObject(lift) {
+    this.lift = lift;
     LiftObject.__super__.constructor.call(this);
     if (liftMeshes.length === 0) {
       liftMeshes = [new e3d.Mesh(makeLidlessBox()), new e3d.Mesh(makeTopFace())];
     }
     this.meshes = liftMeshes;
     this.textures = liftTextures;
-    this.position = lift.position;
   }
+
+  LiftObject.prototype.render = function(matrix) {
+    this.position = this.lift.position;
+    return LiftObject.__super__.render.call(this, matrix);
+  };
 
   return LiftObject;
 
@@ -1146,14 +1208,19 @@ PlayerObject = (function(_super) {
   };
 
   function PlayerObject(player) {
+    this.player = player;
     PlayerObject.__super__.constructor.call(this);
     if (playerMeshes.length === 0) {
       playerMeshes = [new e3d.Mesh(makeBox())];
     }
     this.meshes = playerMeshes;
     this.textures = playerTextures;
-    this.position = player.position;
   }
+
+  PlayerObject.prototype.render = function(matrix) {
+    this.position = this.player.position;
+    return PlayerObject.__super__.render.call(this, matrix);
+  };
 
   return PlayerObject;
 
