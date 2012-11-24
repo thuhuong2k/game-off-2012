@@ -1,18 +1,18 @@
-liftMeshes = []
-liftTextures = []
-
-setLiftTextures = (textures) ->
-  for texture, index in textures
-    liftTextures[index] = texture
-
-LiftObject = (lift) ->
-  if liftMeshes.length is 0
-    liftMeshes = [ new e3d.Mesh(makeLidlessBox())
-                   new e3d.Mesh(makeTopFace()) ]
+class LiftObject extends e3d.Object
+  liftMeshes = []
+  liftTextures = []
   
-  object = new e3d.Object
-  object.meshes = liftMeshes
-  object.textures = liftTextures
-  object.position = lift.position
+  @setTextures = (textures) ->
+    for texture, index in textures
+      liftTextures[index] = texture
   
-  return object
+  constructor: (lift) ->
+    super()
+    
+    if liftMeshes.length is 0
+      liftMeshes = [ new e3d.Mesh(makeLidlessBox())
+                     new e3d.Mesh(makeTopFace()) ]
+    
+    @meshes = liftMeshes
+    @textures = liftTextures
+    @position = lift.position

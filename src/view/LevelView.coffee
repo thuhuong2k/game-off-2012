@@ -16,11 +16,11 @@ class LevelView
     
     instance = this
     loadImageFiles imagefiles, (images) ->
-      setSkyTextures(createTextures(images['sky']))
-      setLevelTextures(createTextures(images['level']))
-      setBoxTextures(createTextures(images['box']))
-      setLiftTextures(createTextures(images['lift']))
-      setPlayerTextures(createTextures(images['player']))
+      SkyObject.setTextures(createTextures(images['sky']))
+      StaticLevelObject.setTextures(createTextures(images['level']))
+      BoxObject.setTextures(createTextures(images['box']))
+      LiftObject.setTextures(createTextures(images['lift']))
+      PlayerObject.setTextures(createTextures(images['player']))
       e3d.scene = instance.scene
     
     @currState = null
