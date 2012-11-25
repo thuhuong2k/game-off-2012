@@ -16,4 +16,4 @@ class SkyObject extends e3d.Object
     
     @meshes = skyMeshes
     @textures = skyTextures
-    @scale = [90, 90, 90]
+    @scale = [85, 85, 85]

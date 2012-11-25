@@ -1102,7 +1102,7 @@ SkyObject = (function(_super) {
     }
     this.meshes = skyMeshes;
     this.textures = skyTextures;
-    this.scale = [90, 90, 90];
+    this.scale = [85, 85, 85];
   }
 
   return SkyObject;
