@@ -5,6 +5,8 @@ class EmptyBlock
   constructor: (@level, @position) ->
   
   move: ->
+    # If there is nothing to land on below an empty block then it should act as
+    # a solid block.
     below = @level.blockBelow @position
     return below.type isnt 'empty'
   
@@ -61,7 +63,23 @@ class LiftBlock
   
   move: -> return false
   
-  update: -> return false
+  update: ->
+    up = [0, 0, 1]
+    down = [0, 0, -1]
+    here = @position
+    above = vec.add(here, up)
+    below = vec.add(here, down)
+    if @level.blockAt(above).type is 'empty'
+      if here[2] isnt @bottom
+        @level.swapBlocksAt(here, below)
+        return true
+    else
+      if here[2] isnt @top
+        force = Infinity
+        if @level.blockAt(above).move(up, force)
+          @level.swapBlocksAt(here, above)
+          return true
+    return false
 
 
 class Player
@@ -105,7 +123,7 @@ class LevelState extends Observable
     @forEach 'lift', (lift, position) ->
       below = instance.blockBelow(position)
       if below.type is 'lift'
-        below.top = position[z]
+        below.top = position[2]
         instance.setBlockAt(position, new EmptyBlock)
   
   forEach: (type, callback) ->
