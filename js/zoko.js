@@ -255,7 +255,7 @@ LevelState = (function(_super) {
                   case 'X':
                     _results2.push(new PlatformBlock);
                     break;
-                  case 'B':
+                  case '#':
                     _results2.push(new BoxBlock(this, position));
                     break;
                   case '^':

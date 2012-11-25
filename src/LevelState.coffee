@@ -110,7 +110,7 @@ class LevelState extends Observable
                         switch block
                           when 'O' then new SolidBlock
                           when 'X' then new PlatformBlock
-                          when 'B' then new BoxBlock(this, position)
+                          when '#' then new BoxBlock(this, position)
                           when '^' then new LiftBlock(this, position)
                           when 'S' then @player = new Player(this, position)
                           else new EmptyBlock(this, position)
