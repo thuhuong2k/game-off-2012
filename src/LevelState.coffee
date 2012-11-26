@@ -125,6 +125,8 @@ class LevelState extends Observable
       if below.type is 'lift'
         below.top = position[2]
         instance.setBlockAt(position, new EmptyBlock)
+    
+    @steps = 0
   
   forEach: (type, callback) ->
     result = []
@@ -175,6 +177,7 @@ class LevelState extends Observable
                when 'down'  then [ 0, 1, 0]
     force = 1
     if @player.move(offset, force)
+      @steps++
       while @update() then
   
   update: ->

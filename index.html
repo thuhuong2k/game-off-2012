@@ -17,7 +17,7 @@
       canvas = document.getElementById('zoko');
       e3d.init(canvas);
 
-      loadJsonFile('lev/test.json', function (level) {
+      loadJsonFile('lev/02.json', function (level) {
         levelView = new LevelView();
         levelState = new LevelState(level);
         levelState.observers = [levelView];
