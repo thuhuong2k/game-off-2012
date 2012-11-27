@@ -71,8 +71,9 @@ class LiftBlock
     below = vec.add(here, down)
     if @level.blockAt(above).type is 'empty'
       if here[2] isnt @bottom
-        @level.swapBlocksAt(here, below)
-        return true
+        if @level.blockAt(below).type is 'empty'
+          @level.swapBlocksAt(here, below)
+          return true
     else
       if here[2] isnt @top
         force = Infinity

@@ -175,8 +175,10 @@ LiftBlock = (function() {
     below = vec.add(here, down);
     if (this.level.blockAt(above).type === 'empty') {
       if (here[2] !== this.bottom) {
-        this.level.swapBlocksAt(here, below);
-        return true;
+        if (this.level.blockAt(below).type === 'empty') {
+          this.level.swapBlocksAt(here, below);
+          return true;
+        }
       }
     } else {
       if (here[2] !== this.top) {
@@ -288,6 +290,7 @@ LevelState = (function(_super) {
         return instance.setBlockAt(position, new EmptyBlock);
       }
     });
+    this.steps = 0;
   }
 
   LevelState.prototype.forEach = function(type, callback) {
@@ -395,6 +398,7 @@ LevelState = (function(_super) {
     })();
     force = 1;
     if (this.player.move(offset, force)) {
+      this.steps++;
       while (this.update()) {}
       return undefined;
     }
