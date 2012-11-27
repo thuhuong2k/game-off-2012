@@ -22,7 +22,8 @@
         levelState = new LevelState(level);
         levelState.observers = [levelView];
         levelState.notifyObservers();
-        new KeyboardController(levelState);
+        new KeyboardController(levelState, levelView.camera);
+        new MouseController(canvas, levelView.camera);
       });
 
       e3d.onrender = function () {
