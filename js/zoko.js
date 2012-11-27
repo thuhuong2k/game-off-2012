@@ -34,18 +34,62 @@ GamePlay = function() {
 };
 
 KeyboardController = (function() {
+  var getRelativeDirection, relativeDirections;
+
+  relativeDirections = [
+    {
+      left: 'left',
+      up: 'up',
+      right: 'right',
+      down: 'down'
+    }, {
+      left: 'up',
+      up: 'right',
+      right: 'down',
+      down: 'left'
+    }, {
+      left: 'right',
+      up: 'down',
+      right: 'left',
+      down: 'up'
+    }, {
+      left: 'down',
+      up: 'left',
+      right: 'up',
+      down: 'right'
+    }
+  ];
+
+  getRelativeDirection = function(rotationZ) {
+    var index, mod, q;
+    console.log("rotationZ = " + rotationZ);
+    q = rotationZ + (Math.PI / 4);
+    console.log("q = " + q);
+    mod = q % (2 * Math.PI);
+    console.log("mod = " + mod);
+    if (mod < 0) {
+      mod = mod + 2 * Math.PI;
+    }
+    console.log("mod = " + mod);
+    index = Math.floor(mod / (Math.PI / 2));
+    console.log("index = " + index);
+    return relativeDirections[index];
+  };
 
   function KeyboardController(levelState, camera) {
     $(document).on('keydown', function(e) {
+      var directions, rotationZ;
+      rotationZ = camera.rotation[2];
+      directions = getRelativeDirection(rotationZ);
       switch (e.which) {
         case 37:
-          return levelState.movePlayer('left');
+          return levelState.movePlayer(directions.left);
         case 38:
-          return levelState.movePlayer('up');
+          return levelState.movePlayer(directions.up);
         case 39:
-          return levelState.movePlayer('right');
+          return levelState.movePlayer(directions.right);
         case 40:
-          return levelState.movePlayer('down');
+          return levelState.movePlayer(directions.down);
       }
     });
   }
