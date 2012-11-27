@@ -1,13 +1,14 @@
-KeyboardController = (levelState) ->
+class KeyboardController
 
-  $(document).on 'keydown', (e) ->
+  constructor: (levelState) ->
 
-    switch e.which
-      when 37 # left
-        levelState.movePlayer('left')
-      when 38 # up
-        levelState.movePlayer('up')
-      when 39 # right
-        levelState.movePlayer('right')
-      when 40 # down
-        levelState.movePlayer('down')
+    $(document).on 'keydown', (e) ->
+      switch e.which
+        when 37 # left
+          levelState.movePlayer('left')
+        when 38 # up
+          levelState.movePlayer('up')
+        when 39 # right
+          levelState.movePlayer('right')
+        when 40 # down
+          levelState.movePlayer('down')
