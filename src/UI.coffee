@@ -1,18 +1,27 @@
 class UI
 
   constructor: ->
+    @stepsCounter = $('#steps')
+    @nextBtn = $('#nextBtn')
+    @nextBtn.hide()
 
 
   update: (game, args) ->
     switch args[0]
       when 'winner'
+        console.log "Winner!"
         # showWinnerModal()
-        $('#next').on 'click', ->
+        @nextBtn.show()
+        instance = this
+        @nextBtn.on 'click', ->
+          instance.nextBtn.hide()
           game.nextLevel()
       when 'steps'
-        updateStepsCount()
+        steps = game.getCurrentLevelState().steps
+        updateStepsCount(steps)
 
   showWinnerModal: ->
 
   updateStepsCount: ->
+    @stepsCounter.html(steps + 'steps')
 

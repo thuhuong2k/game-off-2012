@@ -38,5 +38,8 @@ class Game extends Observable
       levelState.observers = [instance.levelView]
       levelState.notifyObservers()
 
+  getCurrentLevelState: ->
+    return @levelView.currState
+
   # saveGame: ->
   # loadGame: ->
