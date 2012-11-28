@@ -145,6 +145,7 @@ table {
   background-color:#333;
   border:0px solid #333;
   font-weight:normal;
+  margin-left:5px;
 }
 .icon-btn:hover {
 	color:#666;
