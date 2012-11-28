@@ -4,10 +4,10 @@ class UI
     @stepsCounter = $('#steps')
     @nextBtn = $('#nextBtn')
     @menu = $('#menu')
-    @menu.fadeOut()
+    @menu.hide()
     @menuTitle = @menu.find('.title')
     @menuOverlay = $('#menuOverlay')
-    @menuOverlay.fadeOut()
+    @menuOverlay.hide()
     @menuShown = false
     @continueBtn = $('#continueBtn')
     @continueBtn.hide()
@@ -33,11 +33,17 @@ class UI
         instance.resetStepsCount()
 
     @menuBtn.on 'click', ->
-      instance.setMenuTitle('Options')
-      instance.menuOverlay.fadeIn()
-      instance.menu.fadeIn()
-      instance.menuShown = true
-      instance.continueBtn.show()
+      if instance.menuShown
+        instance.menu.fadeOut()
+        instance.menuOverlay.fadeOut()
+        instance.menuShown = false
+      else
+        instance.setMenuTitle('Options')
+        instance.menuOverlay.fadeIn()
+        instance.menu.fadeIn()
+        instance.menuShown = true
+        instance.continueBtn.show()
+
 
     @continueBtn.on 'click', ->
       instance.menu.fadeOut()

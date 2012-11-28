@@ -146,6 +146,9 @@ table {
   border:0px solid #333;
   font-weight:normal;
 }
+.icon-btn:hover {
+	color:#666;
+}
 
 footer {
 	width:970px;
