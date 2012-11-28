@@ -1,10 +1,43 @@
 class Game
 
-  constructor: ->
-    loadJsonFile 'levels/01.json', (level) ->
-      levelView = new LevelView()
+  # Pad a number with zeroes
+  zeroExtend = (number, length) ->
+    str = '' + number;
+    while str.length < length
+      str = '0' + str
+    return str
+
+  constructor: (@levelView) ->
+
+    @currentLevel = 1
+    @numLevels = 4
+    @loadCurrentLevel()
+
+
+  newGame: ->
+
+  restartLevel: ->
+
+  nextLevel: ->
+    @currentLevel++
+    if @currentLevel > @numLevels
+      @currentLevel = 1
+
+    @loadCurrentLevel()
+
+  loadCurrentLevel: ->
+
+    levelPath = 'levels/' + zeroExtend(@currentLevel, 2) + '.json'
+    instance = this
+
+    loadJsonFile levelPath, (level) ->
       levelState = new LevelState(level)
-      levelState.observers = [levelView]
+      levelState.onClear = ->
+        # UI.showScreen(You made it!)
+        instance.nextLevel()
+
+      levelState.observers = [instance.levelView]
       levelState.notifyObservers()
-      new KeyboardController(levelState, levelView.camera)
-      new MouseController(canvas, levelView.camera)
+
+  # saveGame: ->
+  # loadGame: ->

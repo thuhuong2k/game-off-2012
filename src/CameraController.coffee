@@ -1,6 +1,7 @@
-class MouseController
+class CameraController
 
-  constructor: (canvas, camera) ->
+  constructor: (levelView, canvas) ->
+    camera = levelView.camera
     mouseDown = false
     previousX = 0
     previousY = 0
@@ -10,11 +11,9 @@ class MouseController
       mouseDown = true
       previousX = e.screenX
       previousY = e.screenY
-      console.log(e)
 
     $(document).on 'mouseup', (e) ->
       mouseDown = false
-      console.log('mouse up')
     .on 'mousemove', (e) ->
       if mouseDown
         dx = (e.screenX - previousX) * sensitivity

@@ -1,4 +1,4 @@
-class KeyboardController
+class PlayerController
   relativeDirections = [
     {
       left: 'left',
@@ -41,9 +41,11 @@ class KeyboardController
 
     return relativeDirections[index]
 
-  constructor: (levelState, camera) ->
+  constructor: (levelView) ->
+    camera = levelView.camera
 
     $(document).on 'keydown', (e) ->
+      levelState = levelView.currState
       rotationZ = camera.rotation[2]
       directions = getRelativeDirection(rotationZ)
       switch e.which

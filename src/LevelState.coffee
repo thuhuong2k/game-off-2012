@@ -1,42 +1,42 @@
 class EmptyBlock
   type: 'empty'
   static: false
-  
+
   constructor: (@level, @position) ->
-  
+
   move: ->
     # If there is nothing to land on below an empty block then it should act as
     # a solid block.
     below = @level.blockBelow @position
     return below.type isnt 'empty'
-  
+
   update: -> return false
 
 
 class SolidBlock
   type: 'solid'
   static: true
-  
+
   move: -> return false
-  
+
   update: -> return false
 
 
 class PlatformBlock
   type: 'platform'
   static: true
-  
+
   move: -> return false
-  
+
   update: -> return false
 
 
 class BoxBlock
   type: 'box'
   static: false
-  
+
   constructor: (@level, @position) ->
-  
+
   move: (direction, force) ->
     if force >= 1
       here = @position
@@ -47,7 +47,7 @@ class BoxBlock
         @level.swapBlocksAt(here, next)
         return true
     return false
-  
+
   update: ->
     gravity = 1
     return @move([0, 0, -1], gravity)
@@ -56,13 +56,13 @@ class BoxBlock
 class LiftBlock
   type: 'lift'
   static: false
-  
+
   constructor: (@level, @position) ->
     @bottom = @position[2]
     @top = @position[2]
-  
+
   move: -> return false
-  
+
   update: ->
     up = [0, 0, 1]
     down = [0, 0, -1]
@@ -86,9 +86,9 @@ class LiftBlock
 class Player
   type: 'player'
   static: false
-  
+
   constructor: (@level, @position) ->
-  
+
   move: (direction, force) ->
     here = @position
     next = vec.add(here, direction)
@@ -96,7 +96,7 @@ class Player
       @level.swapBlocksAt(here, next)
       return true
     return false
-  
+
   update: ->
     gravity = 1
     return @move([0, 0, -1], gravity)
@@ -119,16 +119,18 @@ class LevelState extends Observable
     @height = @blockArray.length
     @depth = @blockArray[0].length
     @width = @blockArray[0][0].length
-    
+
     instance = this
     @forEach 'lift', (lift, position) ->
       below = instance.blockBelow(position)
       if below.type is 'lift'
         below.top = position[2]
         instance.setBlockAt(position, new EmptyBlock)
-    
+
     @steps = 0
-  
+
+    @onClear = ->
+
   forEach: (type, callback) ->
     result = []
     for layer, z in @blockArray
@@ -137,50 +139,61 @@ class LevelState extends Observable
           if block.type is type
             result.push callback(block, [x, y, z])
     return result
-  
+
   forEachBlock: (callback) ->
     for layer, z in @blockArray
       for row, y in layer
         for block, x in row
           callback(block, [x, y, z])
-  
+
   blockAt: (position) ->
     [x, y, z] = position
     if x < 0 or x >= @width then return new EmptyBlock(this, position)
     if y < 0 or y >= @depth then return new EmptyBlock(this, position)
     if z < 0 or z >= @height then return new EmptyBlock(this, position)
     return @blockArray[z][y][x]
-  
+
   blockBelow: (position) ->
     [x, y, z] = position
     until --z < 0
       block = @blockAt([x, y, z])
       if block.type isnt 'empty' then return block
     return new EmptyBlock(this, [x, y, z])
-  
+
   setBlockAt: (position, block) ->
     block.level = this
     block.position = position
     [x, y, z] = position
     @blockArray[z][y][x] = block
-  
+
   swapBlocksAt: (position1, position2) ->
     block1 = @blockAt(position1)
     block2 = @blockAt(position2)
     @setBlockAt(position1, block2)
     @setBlockAt(position2, block1)
-  
+
   movePlayer: (direction) ->
     offset = switch direction
-               when 'left'  then [-1, 0, 0]
-               when 'up'    then [ 0,-1, 0]
-               when 'right' then [ 1, 0, 0]
-               when 'down'  then [ 0, 1, 0]
+      when 'left'  then [-1, 0, 0]
+      when 'up'    then [ 0,-1, 0]
+      when 'right' then [ 1, 0, 0]
+      when 'down'  then [ 0, 1, 0]
     force = 1
+
     if @player.move(offset, force)
       @steps++
-      while @update() then
-  
+      while true
+        allBoxesInPlace = true
+        instance = this
+        @forEach 'box', (box, position) ->
+          if instance.blockBelow(position).type isnt 'platform'
+            allBoxesInPlace = false
+
+        if allBoxesInPlace is true
+          @onClear()
+
+        break unless @update()
+
   update: ->
     changed = false
     @forEachBlock (block) ->
