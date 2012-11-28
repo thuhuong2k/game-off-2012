@@ -9,6 +9,6 @@ class Zoko
     new PlayerController(levelView)
     new CameraController(levelView, canvasOverlay)
     game = new Game(levelView)
-    ui = new UI(container)
+    ui = new UI(game)
     game.observers = [ui]
     e3d.run()

@@ -12,6 +12,7 @@ class Game extends Observable
     @currentLevel = 1
     @numLevels = 5
     @loadCurrentLevel()
+    @solvedLevels = []
 
 
   newGame: ->
@@ -23,6 +24,13 @@ class Game extends Observable
     @currentLevel++
     if @currentLevel > @numLevels
       @currentLevel = 1
+
+    @loadCurrentLevel()
+
+  previousLevel: ->
+    @currentLevel--
+    if @currentLevel < 0
+      @currentLevel = @numLevels
 
     @loadCurrentLevel()
 
