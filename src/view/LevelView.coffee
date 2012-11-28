@@ -8,11 +8,11 @@ class LevelView
     @scene.camera = @camera
 
     imagefiles =
-      'sky': ['/tex/sky.png']
-      'level': ['/tex/wall.png', '/tex/floor.png', '/tex/platform.png']
-      'box': ['/tex/box.png']
-      'lift': ['/tex/lift.png', '/tex/lifttop.png']
-      'player': ['/tex/player.png']
+      'sky': ['/textures/sky.png']
+      'level': ['/textures/wall.png', '/textures/floor.png', '/textures/platform.png']
+      'box': ['/textures/box.png']
+      'lift': ['/textures/lift.png', '/textures/lifttop.png']
+      'player': ['/textures/player.png']
 
     instance = this
     loadImageFiles imagefiles, (images) ->
@@ -55,7 +55,7 @@ class LevelView
     if levelState isnt @currState
       @currState = levelState
       @build(levelState)
-      
+
       instance = this
       e3d.onrender = ->
         player = levelState.player

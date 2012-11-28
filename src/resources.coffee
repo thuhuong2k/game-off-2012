@@ -1,4 +1,4 @@
-resource_dir = 'res/'
+resource_dir = 'resources/'
 
 # Loads an image file to a new Image object which is returned via a callback
 # function
@@ -57,14 +57,14 @@ loadJsonFiles = (filenames, callback) ->
 loadResourceFiles = (filenames, callback) ->
   imagesLoaded = false
   jsonLoaded = false
-  
+
   loaded = {}
-  
+
   loadImageFiles filenames.images, (images) ->
     loaded.images = images
     imagesLoaded = true
     callback(loaded) if jsonLoaded
-  
+
   loadJsonFiles filenames.json, (json) ->
     loaded.json = json
     jsonLoaded = true

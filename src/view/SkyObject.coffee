@@ -11,7 +11,7 @@ class SkyObject extends e3d.Object
 
     if skyMeshes.length is 0
       skyMeshes[0] = null
-      loadJsonFile 'mod/sky.json', (sky) ->
+      loadJsonFile 'models/sky.json', (sky) ->
         skyMeshes[0] = new e3d.Mesh(sky)
 
     @meshes = skyMeshes
