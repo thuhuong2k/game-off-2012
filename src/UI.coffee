@@ -4,12 +4,21 @@ class UI
     @stepsCounter = $('#steps')
     @nextBtn = $('#nextBtn')
     @nextBtn.hide()
+    @restartBtn = $('#restartBtn')
+
     instance = this
+
     @nextBtn.on 'click', ->
       instance.nextBtn.hide()
       game = instance.game
       if game?
         game.nextLevel()
+        instance.resetStepsCount()
+
+    @restartBtn.on 'click', ->
+      game = instance.game
+      if game?
+        game.restartLevel()
         instance.resetStepsCount()
 
   update: (game, args) ->

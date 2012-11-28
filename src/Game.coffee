@@ -17,6 +17,7 @@ class Game extends Observable
   newGame: ->
 
   restartLevel: ->
+    @loadCurrentLevel()
 
   nextLevel: ->
     @currentLevel++
