@@ -4,17 +4,18 @@ class UI
     @stepsCounter = $('#steps')
     @nextBtn = $('#nextBtn')
     @nextBtn.hide()
-
+    instance = this
+    @nextBtn.on 'click', ->
+      instance.nextBtn.hide()
+      game = instance.game
+      game.nextLevel() if game?
 
   update: (game, args) ->
+    @game = game
     levelState = args[0]
     if levelState.solved
       # showWinnerModal()
       @nextBtn.show()
-      instance = this
-      @nextBtn.on 'click', ->
-        instance.nextBtn.hide()
-        game.nextLevel()
 
     steps = levelState.steps
     @updateStepsCount(steps)
