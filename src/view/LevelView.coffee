@@ -55,3 +55,12 @@ class LevelView
     if levelState isnt @currState
       @currState = levelState
       @build(levelState)
+      
+      instance = this
+      e3d.onrender = ->
+        player = levelState.player
+        camera = instance.camera
+        diff = vec.sub(vec.add(player.position,[0.5, 0.5, 0.5]), camera.position)
+        toAdd = vec.mul(diff, 0.05)
+        camera.position = vec.add(camera.position, toAdd)
+        console.log "Hej"
