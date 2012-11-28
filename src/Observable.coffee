@@ -1,6 +1,6 @@
 class Observable
-  notifyObservers: ->
+  notifyObservers: () ->
     if @observers?
       for observer in @observers
         if observer?
-          observer.update(this)
+          observer.update(this, arguments)

@@ -1,4 +1,4 @@
-class Game
+class Game extends Observable
 
   # Pad a number with zeroes
   zeroExtend = (number, length) ->
@@ -33,8 +33,7 @@ class Game
     loadJsonFile levelPath, (level) ->
       levelState = new LevelState(level)
       levelState.onClear = ->
-        # UI.showScreen(You made it!)
-        instance.nextLevel()
+        instance.notifyObservers('winner')
 
       levelState.observers = [instance.levelView]
       levelState.notifyObservers()
