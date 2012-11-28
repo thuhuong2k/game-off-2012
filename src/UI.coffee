@@ -8,7 +8,9 @@ class UI
     @nextBtn.on 'click', ->
       instance.nextBtn.hide()
       game = instance.game
-      game.nextLevel() if game?
+      if game?
+        game.nextLevel()
+        instance.resetStepsCount()
 
   update: (game, args) ->
     @game = game
@@ -25,3 +27,5 @@ class UI
   updateStepsCount: (steps) ->
     @stepsCounter.html(steps + ' steps')
 
+  resetStepsCount: ->
+    @stepsCounter.html('0 steps')
