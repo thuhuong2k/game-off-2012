@@ -32,14 +32,11 @@ class Game extends Observable
 
     loadJsonFile levelPath, (level) ->
       levelState = new LevelState(level)
-      levelState.onClear = ->
-        instance.notifyObservers('winner')
+      levelState.onUpdate = ->
+        instance.notifyObservers(levelState)
 
       levelState.observers = [instance.levelView]
       levelState.notifyObservers()
-
-  getCurrentLevelState: ->
-    return @levelView.currState
 
   # saveGame: ->
   # loadGame: ->

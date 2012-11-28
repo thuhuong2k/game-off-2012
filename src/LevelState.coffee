@@ -129,7 +129,8 @@ class LevelState extends Observable
 
     @steps = 0
 
-    @onClear = ->
+    @solved = false
+    @onUpdate = ->
 
   forEach: (type, callback) ->
     result = []
@@ -173,28 +174,30 @@ class LevelState extends Observable
     @setBlockAt(position2, block1)
 
   movePlayer: (direction) ->
-    offset = switch direction
-      when 'left'  then [-1, 0, 0]
-      when 'up'    then [ 0,-1, 0]
-      when 'right' then [ 1, 0, 0]
-      when 'down'  then [ 0, 1, 0]
-    force = 1
+    unless @solved
+      offset = switch direction
+        when 'left'  then [-1, 0, 0]
+        when 'up'    then [ 0,-1, 0]
+        when 'right' then [ 1, 0, 0]
+        when 'down'  then [ 0, 1, 0]
+      force = 1
 
-    if @player.move(offset, force)
-      @steps++
-      while true
-        allBoxesInPlace = true
-        instance = this
-        @forEach 'box', (box, position) ->
-          if instance.blockBelow(position).type isnt 'platform'
-            allBoxesInPlace = false
+      if @player.move(offset, force)
+        @steps++
+        while true
+          allBoxesInPlace = true
+          instance = this
+          @forEach 'box', (box, position) ->
+            if instance.blockBelow(position).type isnt 'platform'
+              allBoxesInPlace = false
 
-        if allBoxesInPlace is true
-          @onClear()
+          if allBoxesInPlace is true
+            @solved = true
 
-        break unless @update()
+          break unless @update()
 
   update: ->
+    @onUpdate()
     changed = false
     @forEachBlock (block) ->
       changed = changed || block.update()

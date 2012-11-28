@@ -7,21 +7,20 @@ class UI
 
 
   update: (game, args) ->
-    switch args[0]
-      when 'winner'
-        console.log "Winner!"
-        # showWinnerModal()
-        @nextBtn.show()
-        instance = this
-        @nextBtn.on 'click', ->
-          instance.nextBtn.hide()
-          game.nextLevel()
-      when 'steps'
-        steps = game.getCurrentLevelState().steps
-        updateStepsCount(steps)
+    levelState = args[0]
+    if levelState.solved
+      # showWinnerModal()
+      @nextBtn.show()
+      instance = this
+      @nextBtn.on 'click', ->
+        instance.nextBtn.hide()
+        game.nextLevel()
+
+    steps = levelState.steps
+    @updateStepsCount(steps)
 
   showWinnerModal: ->
 
-  updateStepsCount: ->
-    @stepsCounter.html(steps + 'steps')
+  updateStepsCount: (steps) ->
+    @stepsCounter.html(steps + ' steps')
 
