@@ -49,9 +49,14 @@ class KeyboardController
       switch e.which
         when 37 # left
           levelState.movePlayer(directions.left)
+          return false
         when 38 # up
           levelState.movePlayer(directions.up)
+          return false
         when 39 # right
           levelState.movePlayer(directions.right)
+          return false
         when 40 # down
           levelState.movePlayer(directions.down)
+          return false
+      return true
