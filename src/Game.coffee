@@ -10,7 +10,7 @@ class Game extends Observable
   constructor: (@levelView) ->
 
     @currentLevel = 1
-    @numLevels = 4
+    @numLevels = 5
     @loadCurrentLevel()
 
 

@@ -1,19 +1,21 @@
 [ [
-    "OOOOO",
-    "OOOOO",
-    "OOOOO",
-    "O^OOO",
-    "OOOOX"
+    "OOOO",
+    "OOOO",
+    "OOX^",
+    "XOOO"
   ],[
-    "   OO",
-    "OO OO",
-    "OO#  ",
-    " ^ X ",
-    "S    "
+    "OOOO",
+    "OOOO",
+    "OO  ",
+    "    "
   ],[
-    "     ",
-    "     ",
-    " #   ",
-    "     ",
-    "     "
+    "OOOO",
+    "OOOO",
+    "S# ^",
+    "    "
+  ],[
+    "    ",
+    "  # ",
+    "    ",
+    "    "
 ] ]
