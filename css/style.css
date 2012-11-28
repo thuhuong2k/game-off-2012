@@ -4,6 +4,12 @@ body, p {
 body {
 	background-color: #f4f4f4;
 }
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0px;
+  background: transparent;
+}
 .container {
 	width:100%;
 	margin-left:auto;
@@ -32,6 +38,78 @@ body {
 	top:168px;
 	-webkit-box-shadow: inset 0px 0px 15px 7px rgba(51, 51, 51, 0.3);
 	box-shadow: inset 0px 0px 15px 7px rgba(51, 51, 51, 0.3);
+}
+#menuOverlay {
+	width:850px;
+	height:450px;
+	z-index:2000;
+	position:absolute;
+	top:168px;
+	background-color:#333;
+	opacity: 0.8;
+}
+#menu {
+	width:850px;
+	height:450px;
+	z-index:3000;
+	position:absolute;
+	top:168px;
+	-webkit-box-shadow: inset 0px 0px 15px 7px rgba(51, 51, 51, 0.3);
+	box-shadow: inset 0px 0px 15px 7px rgba(51, 51, 51, 0.3);
+	color:#fff;
+}
+#menu h2 {
+	text-align:left;
+	margin-top:0px;
+}
+#menu .highscore {
+	width:335px;
+	float:right;
+	padding:15px;
+	padding-right: 60px;
+	padding-top:60px;
+}
+#menu .highscore table {
+	width:100%;
+	border:2px solid #fff;
+	border-radius:5px;
+}
+#menu .highscore table tr td {
+	padding:8px;
+	border-bottom:1px solid #fff;
+	text-align: left;
+	vertical-align: middle;
+}
+#menu .highscore table tr td:first-child {
+	font-weight:bold;
+	border-right:1px solid #fff;
+}
+#menu .highscore table tr.last td {
+	border-bottom: none;
+}
+#menu .options {
+	width:335px;
+	float:left;
+	padding:15px;
+	padding-left: 60px;
+	padding-top:60px;
+}
+#menu .options .btn {
+	width:100%;
+	height:40px;
+	border:1px solid #fff;
+	background: transparent;
+	padding:10px;
+	color:#fff;
+	font-size:14px;
+	border-radius: 7px;
+	font-weight:bold;
+	cursor:pointer;
+	margin-bottom:10px;
+}
+#menu .options .btn:hover {
+	background-color:#fff;
+	color:#333;
 }
 #steps {
 	color:#333;

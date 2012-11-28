@@ -9,11 +9,48 @@
     <div class="container">
       <div id="wrapper">
         <canvas id="zoko" height="450" width="850"></canvas>
+
         <div id="overlay">
           <p id="steps">0 steps</p>
         </div>
+
+        <div id="menu" style="display:none">
+          <div class="options">
+            <h2>Good job!</h2>
+            <button id="nextBtn" class="btn">Next Level &rarr;</button>
+            <button id="previousBtn" class="btn">&larr; Previous Level</button>
+          </div>
+          <div class="highscore">
+            <h2>Highscore</h2>
+            <table class="table">
+              <tbody>
+                <tr>
+                  <td>Level 1
+                  <td>2 steps</td>
+                </tr>
+                <tr>
+                  <td>Level 2
+                  <td>3 steps</td>
+                </tr>
+                <tr>
+                  <td>Level 3
+                  <td>?</td>
+                </tr>
+                <tr>
+                  <td>Level 4
+                  <td>?</td>
+                </tr>
+                <tr class="last">
+                  <td>Level 5
+                  <td>?</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div id="menuOverlay" style="display:none"></div>
+
         <div class="btn-group">
-          <button id="nextBtn" class="btn">Next Level</button>
           <button id="restartBtn" class="icon-btn icon-undo"></button>
         </div>
       </div>
@@ -25,7 +62,7 @@
       </p>
     </footer>
   </body>
-  <script src="js/zepto.min.js"></script>
+  <script src="js/jquery-1.8.3.min.js"></script>
   <script src="js/zoko.js"></script>
   <script>
     window.onload = function() {

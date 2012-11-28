@@ -3,13 +3,17 @@ class UI
   constructor: ->
     @stepsCounter = $('#steps')
     @nextBtn = $('#nextBtn')
-    @nextBtn.hide()
+    @menu = $('#menu')
+    @menu.fadeOut()
+    @menuOverlay = $('#menuOverlay')
+    @menuOverlay.fadeOut()
     @restartBtn = $('#restartBtn')
 
     instance = this
 
     @nextBtn.on 'click', ->
-      instance.nextBtn.hide()
+      instance.menu.fadeOut()
+      instance.menuOverlay.fadeOut()
       game = instance.game
       if game?
         game.nextLevel()
@@ -26,7 +30,8 @@ class UI
     levelState = args[0]
     if levelState.solved
       # showWinnerModal()
-      @nextBtn.show()
+      @menuOverlay.fadeIn()
+      @menu.fadeIn()
 
     steps = levelState.steps
     @updateStepsCount(steps)
