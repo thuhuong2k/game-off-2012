@@ -54,10 +54,7 @@ class UI
           instance.nextBtn.show()
         else
           instance.nextBtn.hide()
-        console.log "Hello!"
-        console.log instance.game.solvedLevels
         if instance.game.currentLevel-1 in instance.game.solvedLevels
-          console.log "Show previous"
           instance.previousBtn.show()
         else
           instance.previousBtn.hide()
