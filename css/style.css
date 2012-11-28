@@ -1,5 +1,11 @@
-body, p {
-	font-family: 'Helvetica Neue', 'Arial', sans-serif;
+html {
+  font-size: 100%;
+  -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+}
+body, p, a, h1, h2 {
+	font-family: "nimbus-sans", 'Helvetica Neue', 'Arial', sans-serif;
+	font-size: 16px;
 }
 body {
 	background-color: #f4f4f4;
@@ -47,6 +53,7 @@ table {
 	top:168px;
 	background-color:#333;
 	opacity: 0.8;
+	margin-left:60px;
 }
 #menu {
 	width:850px;
@@ -54,13 +61,13 @@ table {
 	z-index:3000;
 	position:absolute;
 	top:168px;
-	-webkit-box-shadow: inset 0px 0px 15px 7px rgba(51, 51, 51, 0.3);
-	box-shadow: inset 0px 0px 15px 7px rgba(51, 51, 51, 0.3);
 	color:#fff;
+	margin-left:60px;
 }
 #menu h2 {
 	text-align:left;
 	margin-top:0px;
+	font-size:26px;
 }
 #menu .highscore {
 	width:335px;
@@ -122,10 +129,33 @@ table {
 	margin-top:10px;
 	margin-right:15px;
 	font-weight:bold;
-	font-size:18px;
+	font-size:22px;
+}
+#logo {
+	padding-right: 0;
+	padding-left: 0;
+	margin-left: 20px;
+	float: right;
+	font-weight: bold;
+	color: black;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, .1), 0 0 30px rgba(255, 255, 255, .125);
+	-webkit-transition: all .2s linear;
+	-moz-transition: all .2s linear;
+	transition: all .2s linear;
+	float:left;
+	font-size:36px;
+	margin:0px;
+	margin-top:5px;
+	cursor:default;
 }
 
-.btn-group {
+#logo:hover {
+	text-decoration: none;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, .1), 0 0 30px rgba(255, 255, 255, .4);
+	color:#fff;
+	cursor:default;
+}
+#btn-group {
 	width:500px;
 	float:right;
 }
@@ -142,13 +172,19 @@ table {
   cursor: pointer;
   float:right;
   margin-top:10px;
-  background-color:#333;
+  color: black;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, .1), 0 0 30px rgba(255, 255, 255, .125);
+  -webkit-transition: all .2s linear;
+  -moz-transition: all .2s linear;
+  transition: all .2s linear;
   border:0px solid #333;
   font-weight:normal;
   margin-left:5px;
 }
 .icon-btn:hover {
-	color:#666;
+	text-decoration: none;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, .1), 0 0 30px rgba(255, 255, 255, .4);
+	color:#fff;
 }
 
 footer {
