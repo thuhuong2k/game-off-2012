@@ -2,6 +2,7 @@ class UI
 
   constructor: (@game) ->
     @stepsCounter = $('#steps')
+    @levelCounter = $('#level').find('.levelNumber')
     @nextBtn = $('#nextBtn')
     @previousBtn = $('#previousBtn')
     @menu = $('#menu')
@@ -25,6 +26,7 @@ class UI
       game = instance.game
       if game?
         game.nextLevel()
+        instance.levelCounter.html(game.currentLevel)
         instance.resetStepsCount()
 
     @previousBtn.on 'click', ->
@@ -34,6 +36,7 @@ class UI
       game = instance.game
       if game?
         game.previousLevel()
+        instance.levelCounter.html(game.currentLevel)
         instance.resetStepsCount()
 
     @restartBtn.on 'click', ->
@@ -50,7 +53,9 @@ class UI
       else
         instance.setMenuTitle('Options')
         instance.continueBtn.show()
-        if instance.game.currentLevel+1 in instance.game.solvedLevels
+        console.log instance.game.currentLevel
+        console.log instance.game.solvedLevels
+        if instance.game.currentLevel in instance.game.solvedLevels
           instance.nextBtn.show()
         else
           instance.nextBtn.hide()
