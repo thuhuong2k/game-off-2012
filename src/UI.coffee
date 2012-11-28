@@ -81,7 +81,6 @@ class UI
           if game? and not instance.menuShown
             game.restartLevel()
             instance.resetStepsCount()
-          return false
       return true
 
 
