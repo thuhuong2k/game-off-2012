@@ -74,6 +74,16 @@ class UI
       instance.menuOverlay.fadeOut()
       instance.menuShown = false
 
+    $(document).on 'keydown', (e) ->
+      switch e.which
+        when 82 # r
+          game = instance.game
+          if game? and not instance.menuShown
+            game.restartLevel()
+            instance.resetStepsCount()
+          return false
+      return true
+
 
   update: (game, args) ->
     @game = game
