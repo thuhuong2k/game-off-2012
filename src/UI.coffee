@@ -2,10 +2,13 @@ class UI
 
   constructor: ->
 
+
   update: (game, args) ->
     switch args[0]
       when 'winner'
-        showWinnerModal()
+        # showWinnerModal()
+        $('#next').on 'click', ->
+          game.nextLevel()
       when 'steps'
         updateStepsCount()
 
