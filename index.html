@@ -2,18 +2,21 @@
 <html>
   <head>
     <title>Zoko</title>
+    <link href="css/font-awesome.css" rel="stylesheet" />
     <link href="css/style.css" rel="stylesheet" />
   </head>
   <body>
     <div class="container">
-      <h1>ZOKO</h1>
-      <canvas id="zoko" height="400" width="780"></canvas>
-      <div class="btn-group">
-        <button id="nextBtn" class="btn">Next Level</button>
-        <button id="restartBtn" class="btn">Restart Level</button>
-        <button id="newBtn" class="btn">New Game</button>
+      <div id="wrapper">
+        <canvas id="zoko" height="450" width="850"></canvas>
+        <div id="overlay">
+          <p id="steps">0 steps</p>
+        </div>
+        <div class="btn-group">
+          <button id="nextBtn" class="btn">Next Level</button>
+          <button id="restartBtn" class="icon-btn icon-undo"></button>
+        </div>
       </div>
-      <p id="steps">0 steps</p>
     </div>
   </body>
   <script src="js/zepto.min.js"></script>

@@ -1,7 +1,7 @@
 class Zoko
 
   constructor: (container) ->
-    canvas = container.children('canvas')[0]
+    canvas = container.find('canvas')[0]
     console.log(canvas)
     e3d.init(canvas)
     levelView = new LevelView()
