@@ -187,21 +187,28 @@ class LevelState extends Observable
 
       if @player.move(offset, force)
         @steps++
-        while true
-          allBoxesInPlace = true
-          instance = this
-          @forEach 'box', (box, position) ->
-            if instance.blockBelow(position).type isnt 'platform'
-              allBoxesInPlace = false
+        @update()
 
-          if allBoxesInPlace is true
-            @solved = true
+  checkIfSolved: ->
+    allBoxesInPlace = true
+    instance = this
+    @forEach 'box', (box, position) ->
+      if instance.blockBelow(position).type isnt 'platform'
+        allBoxesInPlace = false
 
-          break unless @update()
-
+    if allBoxesInPlace is true
+      @solved = true
+  
   update: ->
-    @onUpdate()
     changed = false
     @forEachBlock (block) ->
       changed = changed || block.update()
+    
+    if changed
+      @onUpdate()
+      @update()
+    else
+      @checkIfSolved()
+      @onUpdate() if @solved
+    
     return changed
