@@ -10,11 +10,14 @@ class PlayerObject extends e3d.Object
     super()
     
     if playerMeshes.length is 0
-      playerMeshes = [new e3d.Mesh(makeBox())]
+      playerMeshes[0] = null
+      loadJsonFile 'models/player.json', (player) ->
+        playerMeshes[0] = new e3d.Mesh(player)
     
     @meshes = playerMeshes
     @textures = playerTextures
+    @scale = [0.5, 0.5, 0.5]
   
   render: (matrix) ->
-    @position = @player.position
+    @position = vec.add(@player.position, [0.5, 0.5, 0.5])
     super(matrix)
