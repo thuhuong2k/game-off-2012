@@ -1,4 +1,4 @@
-[Zoko](http://lula.github.com/game-off-2012)
+[Zoko](http://lulea.github.com/game-off-2012)
 ==================
 
 Zoko is a simple 3D puzzle game that can be played in any modern web browser supporting WebGL. The basic idea of the game is based on the popular game often called [Sokoban](http://en.wikipedia.org/wiki/Sokoban),
