@@ -11,53 +11,55 @@
     <a href="https://github.com/lulea/game-off-2012/"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
     <div class="container">
       <div id="wrapper">
-        <canvas id="zoko" height="450" width="850"></canvas>
+        <div class="content">
+          <canvas id="zoko" height="450" width="850"></canvas>
 
-        <div id="overlay">
-          <p id="steps">0 steps</p>
-          <p id="level">Level <span class="levelNumber">1</span></p>
-        </div>
+          <div id="overlay">
+            <p id="steps">0 steps</p>
+            <p id="level">Level <span class="levelNumber">1</span></p>
+          </div>
 
-        <div id="menu">
-          <div class="options">
-            <h2 class="title">Options</h2>
-            <button id="continueBtn" class="btn">Continue Game</button>
-            <button id="nextBtn" class="btn">Next Level &rarr;</button>
-            <button id="previousBtn" class="btn">&larr; Previous Level</button>
+          <div id="menu">
+            <div class="options">
+              <h2 class="title">Options</h2>
+              <button id="continueBtn" class="btn">Continue Game</button>
+              <button id="nextBtn" class="btn">Next Level &rarr;</button>
+              <button id="previousBtn" class="btn">&larr; Previous Level</button>
+            </div>
+            <div class="highscore">
+              <h2>Highscore</h2>
+              <table class="table">
+                <tbody>
+                  <tr>
+                    <td>Level 1
+                    <td>2 steps</td>
+                  </tr>
+                  <tr>
+                    <td>Level 2
+                    <td>3 steps</td>
+                  </tr>
+                  <tr>
+                    <td>Level 3
+                    <td>?</td>
+                  </tr>
+                  <tr>
+                    <td>Level 4
+                    <td>?</td>
+                  </tr>
+                  <tr class="last">
+                    <td>Level 5
+                    <td>?</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-          <div class="highscore">
-            <h2>Highscore</h2>
-            <table class="table">
-              <tbody>
-                <tr>
-                  <td>Level 1
-                  <td>2 steps</td>
-                </tr>
-                <tr>
-                  <td>Level 2
-                  <td>3 steps</td>
-                </tr>
-                <tr>
-                  <td>Level 3
-                  <td>?</td>
-                </tr>
-                <tr>
-                  <td>Level 4
-                  <td>?</td>
-                </tr>
-                <tr class="last">
-                  <td>Level 5
-                  <td>?</td>
-                </tr>
-              </tbody>
-            </table>
+          <div id="menuOverlay"></div>
+          <h1 id="logo">zoko</h1>
+          <div id="btn-group">
+            <a id="menuBtn" class="icon-btn icon-home" title="Show Menu"></a>
+            <a id="restartBtn" class="icon-btn icon-undo" title="Restart Level"></a>
           </div>
-        </div>
-        <div id="menuOverlay"></div>
-        <h1 id="logo">zoko</h1>
-        <div id="btn-group">
-          <a id="menuBtn" class="icon-btn icon-home" title="Show Menu"></a>
-          <a id="restartBtn" class="icon-btn icon-undo" title="Restart Level"></a>
         </div>
       </div>
     </div>

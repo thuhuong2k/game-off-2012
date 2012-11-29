@@ -73,7 +73,6 @@ table {
 	top:168px;
 	background-color:#333;
 	opacity: 0.8;
-	margin-left:60px;
 }
 #menu {
 	width:850px;
@@ -82,7 +81,6 @@ table {
 	position:absolute;
 	top:168px;
 	color:#fff;
-	margin-left:60px;
 }
 #menu h2 {
 	text-align:left;
