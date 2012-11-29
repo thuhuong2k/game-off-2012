@@ -1,5 +1,10 @@
 # Vector math functions
 vec =
+  equal: ( u, v ) ->
+    ( u is v ) or ( u[0] == v[0] and
+                    u[1] == v[1] and
+                    u[2] == v[2] )
+  
   add: ( u, v ) ->
     [ u[0] + v[0]
       u[1] + v[1]

@@ -20,4 +20,12 @@ class PlayerObject extends e3d.Object
   
   render: (matrix) ->
     @position = vec.add(@player.position, [0.5, 0.5, 0.5])
+    
+    direction = @player.direction
+    halfPI = Math.PI / 2
+    if vec.equal(direction, [ 0, 1, 0]) then @rotation = [0, 0, 0 * halfPI]
+    if vec.equal(direction, [-1, 0, 0]) then @rotation = [0, 0, 1 * halfPI]
+    if vec.equal(direction, [ 0,-1, 0]) then @rotation = [0, 0, 2 * halfPI]
+    if vec.equal(direction, [ 1, 0, 0]) then @rotation = [0, 0, 3 * halfPI]
+    
     super(matrix)

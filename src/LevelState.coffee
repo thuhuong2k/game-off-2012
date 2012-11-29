@@ -88,8 +88,11 @@ class Player
   static: false
 
   constructor: (@level, @position) ->
+    @direction = [0, 1, 0]
 
   move: (direction, force) ->
+    if direction[2] == 0 # No vertical movement
+      @direction = direction
     here = @position
     next = vec.add(here, direction)
     if @level.blockAt(next).move(direction, force)
