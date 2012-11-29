@@ -22,7 +22,7 @@ Authors
 + http://github.com/samuel02
 
 **Sebastian Viklund**
-http://github.com/dormin
++ http://github.com/dormin
 
 
 License
