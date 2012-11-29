@@ -131,7 +131,7 @@ class LevelState extends Observable
         instance.setBlockAt(position, new EmptyBlock)
 
     @steps = 0
-
+    @asleep = false
     @solved = false
     @onUpdate = ->
 
@@ -177,7 +177,7 @@ class LevelState extends Observable
     @setBlockAt(position2, block1)
 
   movePlayer: (direction) ->
-    unless @solved
+    unless @solved or @asleep
       offset = switch direction
         when 'left'  then [-1, 0, 0]
         when 'up'    then [ 0,-1, 0]
@@ -187,7 +187,7 @@ class LevelState extends Observable
 
       if @player.move(offset, force)
         @steps++
-        @update()
+        @update(true)
 
   checkIfSolved: ->
     allBoxesInPlace = true
@@ -199,16 +199,21 @@ class LevelState extends Observable
     if allBoxesInPlace is true
       @solved = true
   
-  update: ->
-    changed = false
-    @forEachBlock (block) ->
-      changed = changed || block.update()
+  update: (changed = false) ->
+    
+    if changed is false
+      @forEachBlock (block) ->
+        changed = block.update() or changed
     
     if changed
       @onUpdate()
-      @update()
+      @asleep = true
+      instance = this
+      @notifyObservers ->
+        instance.update()
     else
       @checkIfSolved()
       @onUpdate() if @solved
+      @asleep = false
     
     return changed

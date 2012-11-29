@@ -14,7 +14,20 @@ class BoxObject extends e3d.Object
     
     @meshes = boxMeshes
     @textures = boxTextures
+    
+    @prevPosition = @box.position
+    @position = @box.position
+  
+  animate: (frame) ->
+    target = @box.position
+    if frame isnt LevelView.ANIMATION_FRAMES_PER_STEP
+      diff = vec.sub(target, @prevPosition)
+      time = frame / LevelView.ANIMATION_FRAMES_PER_STEP
+      dist = vec.mul(diff, time)
+      @position = vec.add(@prevPosition, dist)
+    else
+      @position = target
+      @prevPosition = target
   
   render: (matrix) ->
-    @position = @box.position
     super(matrix)

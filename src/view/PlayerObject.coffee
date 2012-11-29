@@ -16,11 +16,25 @@ class PlayerObject extends e3d.Object
     
     @meshes = playerMeshes
     @textures = playerTextures
+    
+    position = vec.add(@player.position, [0.5, 0.5, 0.5])
+    @prevPosition = position
+    @position = position
+    
     @scale = [0.5, 0.5, 0.5]
   
+  animate: (frame) ->
+    target = vec.add(@player.position, [0.5, 0.5, 0.5])
+    if frame isnt LevelView.ANIMATION_FRAMES_PER_STEP
+      diff = vec.sub(target, @prevPosition)
+      time = frame / LevelView.ANIMATION_FRAMES_PER_STEP
+      dist = vec.mul(diff, time)
+      @position = vec.add(@prevPosition, dist)
+    else
+      @position = target
+      @prevPosition = target
+  
   render: (matrix) ->
-    @position = vec.add(@player.position, [0.5, 0.5, 0.5])
-    
     direction = @player.direction
     halfPI = Math.PI / 2
     if vec.equal(direction, [ 0, 1, 0]) then @rotation = [0, 0, 0 * halfPI]

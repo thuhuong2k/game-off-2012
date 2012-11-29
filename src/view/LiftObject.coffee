@@ -15,7 +15,20 @@ class LiftObject extends e3d.Object
     
     @meshes = liftMeshes
     @textures = liftTextures
+    
+    @prevPosition = @lift.position
+    @position = @lift.position
+  
+  animate: (frame) ->
+    target = @lift.position
+    if frame isnt LevelView.ANIMATION_FRAMES_PER_STEP
+      diff = vec.sub(target, @prevPosition)
+      time = frame / LevelView.ANIMATION_FRAMES_PER_STEP
+      dist = vec.mul(diff, time)
+      @position = vec.add(@prevPosition, dist)
+    else
+      @position = target
+      @prevPosition = target
   
   render: (matrix) ->
-    @position = @lift.position
     super(matrix)
