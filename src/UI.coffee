@@ -17,6 +17,8 @@ class UI
     @restartBtn = $('#restartBtn')
     @menuBtn = $('#menuBtn')
 
+    @highscoreTable = $('.highscore > .table')
+
     instance = this
 
     @nextBtn.on 'click', ->
@@ -52,9 +54,8 @@ class UI
         instance.menuShown = false
       else
         instance.setMenuTitle('Options')
+        instance.updateHighscoreTable()
         instance.continueBtn.show()
-        console.log instance.game.currentLevel
-        console.log instance.game.solvedLevels
         if instance.game.currentLevel in instance.game.solvedLevels
           instance.nextBtn.show()
         else
@@ -87,10 +88,14 @@ class UI
   update: (game, args) ->
     @game = game
     levelState = args[0]
+    steps = levelState.steps
+
     if levelState.solved
+      @game.highscore.setHighscore(game.currentLevel, steps)
       @game.solvedLevels.push(@game.currentLevel)
       @continueBtn.hide()
       @setMenuTitle('Good job!')
+      @updateHighscoreTable()
       @nextBtn.show()
       if @game.currentLevel-1 in @game.solvedLevels
         @previousBtn.show()
@@ -100,7 +105,6 @@ class UI
       @menu.fadeIn()
       @menuShown = true
 
-    steps = levelState.steps
     @updateStepsCount(steps)
 
   showWinnerModal: ->
@@ -113,3 +117,10 @@ class UI
 
   setMenuTitle: (title) ->
     @menuTitle.html(title)
+
+  updateHighscoreTable: ->
+    tablebody = @highscoreTable.find('tbody')
+    instance = this
+    tablebody.children().each (index, element) ->
+      cell = $(element).children('td').last()
+      cell.html(instance.game.highscore.getHighscore(index+1) + " steps")

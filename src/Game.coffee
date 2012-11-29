@@ -14,6 +14,8 @@ class Game extends Observable
     @loadCurrentLevel()
     @solvedLevels = []
 
+    @highscore = new Highscore
+
 
   newGame: ->
 
