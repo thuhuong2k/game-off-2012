@@ -134,7 +134,6 @@ Highscore = (function() {
   Highscore.prototype.getHighscoreObj = function() {
     var obj;
     obj = localStorage.getItem('highscore');
-    console.log("obj = " + obj);
     if (obj != null) {
       return JSON.parse(obj);
     } else {
