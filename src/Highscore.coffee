@@ -5,7 +5,6 @@ class Highscore
 
   getHighscoreObj: ->
     obj = localStorage.getItem('highscore')
-    console.log("obj = " + obj)
     if obj?
       return JSON.parse(obj)
     else
