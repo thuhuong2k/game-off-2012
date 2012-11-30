@@ -322,10 +322,14 @@ Player = (function() {
   function Player(level, position) {
     this.level = level;
     this.position = position;
+    this.direction = [0, 1, 0];
   }
 
   Player.prototype.move = function(direction, force) {
     var here, next;
+    if (direction[2] === 0) {
+      this.direction = direction;
+    }
     here = this.position;
     next = vec.add(here, direction);
     if (this.level.blockAt(next).move(direction, force)) {
@@ -408,6 +412,7 @@ LevelState = (function(_super) {
       }
     });
     this.steps = 0;
+    this.asleep = false;
     this.solved = false;
     this.onUpdate = function() {};
   }
@@ -502,8 +507,8 @@ LevelState = (function(_super) {
   };
 
   LevelState.prototype.movePlayer = function(direction) {
-    var allBoxesInPlace, force, instance, offset, _results;
-    if (!this.solved) {
+    var force, offset;
+    if (!(this.solved || this.asleep)) {
       offset = (function() {
         switch (direction) {
           case 'left':
@@ -519,36 +524,49 @@ LevelState = (function(_super) {
       force = 1;
       if (this.player.move(offset, force)) {
         this.steps++;
-        _results = [];
-        while (true) {
-          allBoxesInPlace = true;
-          instance = this;
-          this.forEach('box', function(box, position) {
-            if (instance.blockBelow(position).type !== 'platform') {
-              return allBoxesInPlace = false;
-            }
-          });
-          if (allBoxesInPlace === true) {
-            this.solved = true;
-          }
-          if (!this.update()) {
-            break;
-          } else {
-            _results.push(void 0);
-          }
-        }
-        return _results;
+        return this.update(true);
       }
     }
   };
 
-  LevelState.prototype.update = function() {
-    var changed;
-    this.onUpdate();
-    changed = false;
-    this.forEachBlock(function(block) {
-      return changed = changed || block.update();
+  LevelState.prototype.checkIfSolved = function() {
+    var allBoxesInPlace, instance;
+    allBoxesInPlace = true;
+    instance = this;
+    this.forEach('box', function(box, position) {
+      if (instance.blockBelow(position).type !== 'platform') {
+        return allBoxesInPlace = false;
+      }
     });
+    if (allBoxesInPlace === true) {
+      return this.solved = true;
+    }
+  };
+
+  LevelState.prototype.update = function(changed) {
+    var instance;
+    if (changed == null) {
+      changed = false;
+    }
+    if (changed === false) {
+      this.forEachBlock(function(block) {
+        return changed = block.update() || changed;
+      });
+    }
+    if (changed) {
+      this.onUpdate();
+      this.asleep = true;
+      instance = this;
+      this.notifyObservers(function() {
+        return instance.update();
+      });
+    } else {
+      this.checkIfSolved();
+      if (this.solved) {
+        this.onUpdate();
+      }
+      this.asleep = false;
+    }
     return changed;
   };
 
@@ -1226,6 +1244,9 @@ e3d.Texture = (function() {
 })();
 
 vec = {
+  equal: function(u, v) {
+    return (u === v) || (u[0] === v[0] && u[1] === v[1] && u[2] === v[2]);
+  },
   add: function(u, v) {
     return [u[0] + v[0], u[1] + v[1], u[2] + v[2]];
   },
@@ -1285,10 +1306,25 @@ BoxObject = (function(_super) {
     }
     this.meshes = boxMeshes;
     this.textures = boxTextures;
+    this.prevPosition = this.box.position;
+    this.position = this.box.position;
   }
 
+  BoxObject.prototype.animate = function(frame) {
+    var diff, dist, target, time;
+    target = this.box.position;
+    if (frame !== LevelView.ANIMATION_FRAMES_PER_STEP) {
+      diff = vec.sub(target, this.prevPosition);
+      time = frame / LevelView.ANIMATION_FRAMES_PER_STEP;
+      dist = vec.mul(diff, time);
+      return this.position = vec.add(this.prevPosition, dist);
+    } else {
+      this.position = target;
+      return this.prevPosition = target;
+    }
+  };
+
   BoxObject.prototype.render = function(matrix) {
-    this.position = this.box.position;
     return BoxObject.__super__.render.call(this, matrix);
   };
 
@@ -1322,12 +1358,16 @@ Camera = (function(_super) {
 })(e3d.Camera);
 
 LevelView = (function() {
+  var ANIMATION_FRAMES_PER_STEP;
+
+  ANIMATION_FRAMES_PER_STEP = 6;
+
+  LevelView.ANIMATION_FRAMES_PER_STEP = ANIMATION_FRAMES_PER_STEP;
 
   function LevelView() {
     var imagefiles, instance;
     this.camera = new Camera;
     this.camera.distance = 12;
-    this.camera.rotation = [0.5, 0, 0];
     this.scene = new e3d.Scene;
     this.scene.camera = this.camera;
     imagefiles = {
@@ -1347,41 +1387,70 @@ LevelView = (function() {
       return e3d.scene = instance.scene;
     });
     this.currState = null;
+    this.onAnimationFinished = null;
+    this.animationFramesLeft = 0;
   }
 
   LevelView.prototype.build = function(levelState) {
-    var boxGroup, center, levelModel, liftGroup, skySphere;
+    var center, levelModel, skySphere;
     center = [levelState.width / 2, levelState.depth / 2, levelState.height / 2];
     this.camera.position = center;
+    this.camera.rotation = [0.5, 0, 0];
     skySphere = new SkyObject;
     skySphere.position = center;
     levelModel = new StaticLevelObject(levelState);
-    boxGroup = new e3d.Object;
-    boxGroup.children = levelState.forEach('box', function(box, position) {
+    this.boxGroup = new e3d.Object;
+    this.boxGroup.children = levelState.forEach('box', function(box, position) {
       return new BoxObject(box);
     });
-    liftGroup = new e3d.Object;
-    liftGroup.children = levelState.forEach('lift', function(lift, x, y, z) {
+    this.liftGroup = new e3d.Object;
+    this.liftGroup.children = levelState.forEach('lift', function(lift, x, y, z) {
       return new LiftObject(lift);
     });
     this.player = new PlayerObject(levelState.player);
-    return this.scene.objects = [skySphere, levelModel, boxGroup, liftGroup, this.player];
+    return this.scene.objects = [skySphere, levelModel, this.boxGroup, this.liftGroup, this.player];
   };
 
-  LevelView.prototype.update = function(levelState) {
+  LevelView.prototype.update = function(levelState, args) {
     var instance;
     if (levelState !== this.currState) {
       this.currState = levelState;
       this.build(levelState);
       instance = this;
-      return e3d.onrender = function() {
-        var camera, diff, player, toAdd;
-        player = levelState.player;
+      e3d.onrender = function() {
+        var animationFramesLeft, box, boxes, callback, camera, diff, frame, lift, lifts, player, toAdd, _i, _j, _len, _len1;
+        player = instance.player;
+        boxes = instance.boxGroup.children;
+        lifts = instance.liftGroup.children;
+        animationFramesLeft = instance.animationFramesLeft;
+        if (animationFramesLeft > 0) {
+          frame = ANIMATION_FRAMES_PER_STEP - animationFramesLeft + 1;
+          player.animate(frame);
+          for (_i = 0, _len = boxes.length; _i < _len; _i++) {
+            box = boxes[_i];
+            box.animate(frame);
+          }
+          for (_j = 0, _len1 = lifts.length; _j < _len1; _j++) {
+            lift = lifts[_j];
+            lift.animate(frame);
+          }
+          instance.animationFramesLeft--;
+        } else {
+          callback = instance.onAnimationFinished;
+          if (callback != null) {
+            instance.onAnimationFinished = null;
+            callback();
+          }
+        }
         camera = instance.camera;
-        diff = vec.sub(vec.add(player.position, [0.5, 0.5, 0.5]), camera.position);
+        diff = vec.sub(vec.add(player.position, [0.0, 0.0, 0.0]), camera.position);
         toAdd = vec.mul(diff, 0.05);
         return camera.position = vec.add(camera.position, toAdd);
       };
+    }
+    if (args[0] != null) {
+      this.onAnimationFinished = args[0];
+      return this.animationFramesLeft = ANIMATION_FRAMES_PER_STEP;
     }
   };
 
@@ -1416,10 +1485,25 @@ LiftObject = (function(_super) {
     }
     this.meshes = liftMeshes;
     this.textures = liftTextures;
+    this.prevPosition = this.lift.position;
+    this.position = this.lift.position;
   }
 
+  LiftObject.prototype.animate = function(frame) {
+    var diff, dist, target, time;
+    target = this.lift.position;
+    if (frame !== LevelView.ANIMATION_FRAMES_PER_STEP) {
+      diff = vec.sub(target, this.prevPosition);
+      time = frame / LevelView.ANIMATION_FRAMES_PER_STEP;
+      dist = vec.mul(diff, time);
+      return this.position = vec.add(this.prevPosition, dist);
+    } else {
+      this.position = target;
+      return this.prevPosition = target;
+    }
+  };
+
   LiftObject.prototype.render = function(matrix) {
-    this.position = this.lift.position;
     return LiftObject.__super__.render.call(this, matrix);
   };
 
@@ -1447,17 +1531,53 @@ PlayerObject = (function(_super) {
   };
 
   function PlayerObject(player) {
+    var position;
     this.player = player;
     PlayerObject.__super__.constructor.call(this);
     if (playerMeshes.length === 0) {
-      playerMeshes = [new e3d.Mesh(makeBox())];
+      playerMeshes[0] = null;
+      loadJsonFile('models/player.json', function(player) {
+        return playerMeshes[0] = new e3d.Mesh(player);
+      });
     }
     this.meshes = playerMeshes;
     this.textures = playerTextures;
+    position = vec.add(this.player.position, [0.5, 0.5, 0.5]);
+    this.prevPosition = position;
+    this.position = position;
+    this.scale = [0.5, 0.5, 0.5];
   }
 
+  PlayerObject.prototype.animate = function(frame) {
+    var diff, dist, target, time;
+    target = vec.add(this.player.position, [0.5, 0.5, 0.5]);
+    if (frame !== LevelView.ANIMATION_FRAMES_PER_STEP) {
+      diff = vec.sub(target, this.prevPosition);
+      time = frame / LevelView.ANIMATION_FRAMES_PER_STEP;
+      dist = vec.mul(diff, time);
+      return this.position = vec.add(this.prevPosition, dist);
+    } else {
+      this.position = target;
+      return this.prevPosition = target;
+    }
+  };
+
   PlayerObject.prototype.render = function(matrix) {
-    this.position = this.player.position;
+    var direction, halfPI;
+    direction = this.player.direction;
+    halfPI = Math.PI / 2;
+    if (vec.equal(direction, [0, 1, 0])) {
+      this.rotation = [0, 0, 0 * halfPI];
+    }
+    if (vec.equal(direction, [-1, 0, 0])) {
+      this.rotation = [0, 0, 1 * halfPI];
+    }
+    if (vec.equal(direction, [0, -1, 0])) {
+      this.rotation = [0, 0, 2 * halfPI];
+    }
+    if (vec.equal(direction, [1, 0, 0])) {
+      this.rotation = [0, 0, 3 * halfPI];
+    }
     return PlayerObject.__super__.render.call(this, matrix);
   };
 
