@@ -6,6 +6,8 @@ Zoko is a simple 3D puzzle game that can be played in any modern web browser sup
 
 The objective of the game is to move all boxes to indicated platforms in as few steps as possible.
 
+![Zoko Screenshot](http://www.minaspel.com/images/zoko-screen-01.png)
+
 [Demo](http://lulea.github.com/game-off-2012)
 
 
