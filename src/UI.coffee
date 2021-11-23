@@ -3,27 +3,34 @@ class UI
   constructor: (@game) ->
     @stepsCounter = $('#steps')
     @levelCounter = $('#level').find('.levelNumber')
+
     @nextBtn = $('#nextBtn')
     @previousBtn = $('#previousBtn')
-    @menu = $('#menu')
-    @menu.hide()
-    @menuTitle = @menu.find('.title')
-    @menuOverlay = $('#menuOverlay')
-    @menuOverlay.hide()
+
+    @dialogOverlay = $('#dialogOverlay')
+    @dialogOverlay.hide()
+
+    @menuDialog = $('#menuDialog')
+    @menuDialog.hide()
+    @menuTitle = @menuDialog.find('.title')
     @menuShown = false
     @continueBtn = $('#continueBtn')
     @continueBtn.hide()
 
+    @helpDialog = $('#helpDialog')
+    @helpDialog.hide()
+
     @restartBtn = $('#restartBtn')
     @menuBtn = $('#menuBtn')
+    @helpBtn = $('#helpBtn')
 
     @highscoreTable = $('.highscore > .table')
 
     instance = this
 
     @nextBtn.on 'click', ->
-      instance.menu.fadeOut()
-      instance.menuOverlay.fadeOut()
+      instance.menuDialog.fadeOut()
+      instance.dialogOverlay.fadeOut()
       instance.menuShown = false
       game = instance.game
       if game?
@@ -32,8 +39,8 @@ class UI
         instance.resetStepsCount()
 
     @previousBtn.on 'click', ->
-      instance.menu.fadeOut()
-      instance.menuOverlay.fadeOut()
+      instance.menuDialog.fadeOut()
+      instance.dialogOverlay.fadeOut()
       instance.menuShown = false
       game = instance.game
       if game?
@@ -49,8 +56,8 @@ class UI
 
     @menuBtn.on 'click', ->
       if instance.menuShown
-        instance.menu.fadeOut()
-        instance.menuOverlay.fadeOut()
+        instance.menuDialog.fadeOut()
+        instance.dialogOverlay.fadeOut()
         instance.menuShown = false
       else
         instance.setMenuTitle('Options')
@@ -65,15 +72,19 @@ class UI
         else
           instance.previousBtn.hide()
 
-        instance.menuOverlay.fadeIn()
-        instance.menu.fadeIn()
+        instance.dialogOverlay.fadeIn()
+        instance.menuDialog.fadeIn()
         instance.menuShown = true
 
 
     @continueBtn.on 'click', ->
-      instance.menu.fadeOut()
-      instance.menuOverlay.fadeOut()
+      instance.menuDialog.fadeOut()
+      instance.dialogOverlay.fadeOut()
       instance.menuShown = false
+
+    @helpBtn.on 'click', ->
+      instance.helpDialog.fadeIn()
+      instance.dialogOverlay.fadeIn()
 
     $(document).on 'keydown', (e) ->
       switch e.which
@@ -101,8 +112,8 @@ class UI
         @previousBtn.show()
       else
         @previousBtn.hide()
-      @menuOverlay.fadeIn()
-      @menu.fadeIn()
+      @dialogOverlay.fadeIn()
+      @menuDialog.fadeIn()
       @menuShown = true
 
     @updateStepsCount(steps)

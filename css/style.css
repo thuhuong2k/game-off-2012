@@ -16,127 +16,6 @@ table {
   border-spacing: 0px;
   background: transparent;
 }
-.container {
-	width:100%;
-	margin-left:auto;
-	margin-right:auto;
-	padding-top:100px;
-}
-#wrapper {
-	width:850px;
-	margin-left:auto;
-	margin-right:auto;
-	text-align:center;
-	background-color:#333;
-	padding:60px;
-	border-radius:25px;
-	-webkit-box-shadow: 0px 20px 20px 10px rgba(51, 51, 51, 0.4);
-	box-shadow: 0px 20px 20px 10px rgba(51, 51, 51, 0.4);
-}
-#zoko {
-	display:inline;
-}
-#overlay {
-	width:850px;
-	height:450px;
-	z-index:1000;
-	position:absolute;
-	top:168px;
-	-webkit-box-shadow: inset 0px 0px 15px 7px rgba(51, 51, 51, 0.3);
-	box-shadow: inset 0px 0px 15px 7px rgba(51, 51, 51, 0.3);
-}
-#overlay p {
-	color:#333;
-	text-align:right;
-	width:100%;
-	display:block;
-	height:20px;
-	padding:0px;
-	font-weight:bold;
-	font-size:22px;
-}
-#steps {
-	float:right;
-	margin-top:10px;
-	margin-right:15px;
-}
-#level {
-	float:right;
-	margin-top:360px;
-	margin-right:15px;
-}
-#menuOverlay {
-	width:850px;
-	height:450px;
-	z-index:2000;
-	position:absolute;
-	top:168px;
-	background-color:#333;
-	opacity: 0.8;
-}
-#menu {
-	width:850px;
-	height:450px;
-	z-index:3000;
-	position:absolute;
-	top:168px;
-	color:#fff;
-}
-#menu h2 {
-	text-align:left;
-	margin-top:0px;
-	font-size:26px;
-}
-#menu .highscore {
-	width:335px;
-	float:right;
-	padding:15px;
-	padding-right: 60px;
-	padding-top:60px;
-}
-#menu .highscore table {
-	width:100%;
-	border:2px solid #fff;
-	border-radius:5px;
-}
-#menu .highscore table tr td {
-	padding:8px;
-	border-bottom:1px solid #fff;
-	text-align: left;
-	vertical-align: middle;
-}
-#menu .highscore table tr td:first-child {
-	font-weight:bold;
-	border-right:1px solid #fff;
-}
-#menu .highscore table tr.last td {
-	border-bottom: none;
-}
-#menu .options {
-	width:335px;
-	float:left;
-	padding:15px;
-	padding-left: 60px;
-	padding-top:60px;
-}
-#menu .options .btn {
-	width:100%;
-	height:40px;
-	border:1px solid #fff;
-	background: transparent;
-	padding:10px;
-	color:#fff;
-	font-size:14px;
-	border-radius: 7px;
-	font-weight:bold;
-	cursor:pointer;
-	margin-bottom:10px;
-}
-#menu .options .btn:hover {
-	background-color:#fff;
-	color:#333;
-}
-
 #logo {
 	padding-right: 0;
 	padding-left: 0;
@@ -192,18 +71,137 @@ table {
 	text-shadow: 0 1px 0 rgba(255, 255, 255, .1), 0 0 30px rgba(255, 255, 255, .4);
 	color:#fff;
 }
-
-footer {
-	width:970px;
+.container {
+	width:100%;
 	margin-left:auto;
 	margin-right:auto;
-	font-size:14px;
-	margin-top:70px;
-	text-align: center;
-	padding-bottom:40px;
+	padding-top:100px;
 }
-footer p {
-	padding-top:30px;
+#wrapper {
+	width:850px;
+	margin-left:auto;
+	margin-right:auto;
+	text-align:center;
+	background-color:#333;
+	padding:60px;
+	border-radius:25px;
+	-webkit-box-shadow: 0px 20px 20px 10px rgba(51, 51, 51, 0.4);
+	box-shadow: 0px 20px 20px 10px rgba(51, 51, 51, 0.4);
+}
+#zoko {
+	display:inline;
+}
+
+div.overlay {
+	width:850px;
+	height:450px;
+	position:absolute;
+	top:168px;
+}
+
+#statsOverlay {
+	z-index:1000;
+	-webkit-box-shadow: inset 0px 0px 15px 7px rgba(51, 51, 51, 0.3);
+	box-shadow: inset 0px 0px 15px 7px rgba(51, 51, 51, 0.3);
+}
+
+#statsOverlay p {
+	color:#333;
+	text-align:right;
+	width:100%;
+	display:block;
+	height:20px;
+	padding:0px;
+	font-weight:bold;
+	font-size:22px;
+}
+
+#statsOverlay #steps {
+	float:right;
+	margin-top:10px;
+	margin-right:15px;
+}
+
+#statsOverlay #level {
+	float:right;
+	margin-top:360px;
+	margin-right:15px;
+}
+
+#dialogOverlay {
+	z-index:2000;
+	background-color:#333;
+	opacity: 0.8;
+}
+
+.dialog {
+	width:730px;
+	height:375px;
+	position:absolute;
+	top:168px;
+	color:#fff;
+	padding-bottom:15px;
+	padding-right: 60px;
+	padding-top:60px;
+	padding-left:60px;
+}
+
+.dialog h2 {
+	text-align:left;
+	margin-top:0px;
+	font-size:26px;
+}
+
+#menuDialog {
+	z-index:3000;
+}
+
+#menuDialog .highscore {
+	width:335px;
+	float:right;
+}
+#menuDialog .highscore table {
+	width:100%;
+	border:2px solid #fff;
+	border-radius:5px;
+}
+#menuDialog .highscore table tr td {
+	padding:8px;
+	border-bottom:1px solid #fff;
+	text-align: left;
+	vertical-align: middle;
+}
+#menuDialog .highscore table tr td:first-child {
+	font-weight:bold;
+	border-right:1px solid #fff;
+}
+#menuDialog .highscore table tr.last td {
+	border-bottom: none;
+}
+#menuDialog .options {
+	width:335px;
+	float:left;
+}
+#menuDialog .options .btn {
+	width:100%;
+	height:40px;
+	border:1px solid #fff;
+	background: transparent;
+	padding:10px;
+	color:#fff;
+	font-size:14px;
+	border-radius: 7px;
+	font-weight:bold;
+	cursor:pointer;
+	margin-bottom:10px;
+}
+#menuDialog .options .btn:hover {
+	background-color:#fff;
+	color:#333;
+}
+
+#helpDialog {
+	z-index:4000;
 }
 
 .playerKeys, .restartLevelKey {
@@ -292,12 +290,21 @@ ol.arrow-keys {
 	line-height: 41px;
 }
 
-p.footer {
-	clear:both;
-}
-
-.instructions {
-	width:350px;
+/*	Footer
+*********************************/
+footer {
+	width:970px;
 	margin-left:auto;
 	margin-right:auto;
+	font-size:14px;
+	margin-top:70px;
+	text-align: center;
+	padding-bottom:40px;
+}
+footer p {
+	padding-top:30px;
+}
+
+p.footer {
+	clear:both;
 }
